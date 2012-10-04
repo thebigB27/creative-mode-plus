@@ -67,8 +67,9 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Substrate">
-      <HintPath>..\..\Substrate.dll</HintPath>
+    <Reference Include="Substrate, Version=1.3.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Substrate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -147,7 +148,6 @@
     <EmbeddedResource Include="Tools.resx">
       <DependentUpon>Tools.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="CreativeMode+_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -383,6 +383,9 @@
     <Content Include="CMP.OSL-License.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Substrate.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Content Include="Substrate.License.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
