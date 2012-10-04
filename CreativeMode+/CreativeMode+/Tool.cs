@@ -651,7 +651,7 @@ namespace CreativeModePlus
   {
    if(( pt.X != prev.X || pt.Y != prev.Y ) && img != null )
    {
-    placeCursor( prev, disp, 0x00000000, false );
+    placeCursor( prev, disp, 0, false );
  
     placeCursor( pt, disp2, disp, true );
 
@@ -676,7 +676,7 @@ namespace CreativeModePlus
 
      if( loc.X > -1 && loc.X < LoadSave.W && loc.Y > -1 && loc.Y < LoadSave.H )
      {
-      if( selectArea.Width != 0 || lyr[ loc.X ][ loc.Y ] == disp )
+      if( lyr[ loc.X ][ loc.Y ] == disp )
        setPixel( loc, mixColor( clr[ loc.X ][ loc.Y ], col1 ));
 
       else
@@ -863,6 +863,9 @@ namespace CreativeModePlus
   {
    int i, j;
 
+   if( Undo.peek() != "Move" )
+     Undo.add( new ElemUndo( selectArea, clr, lyr, map, "Move" ));
+
    if( selectArea.Width != 0 &&
      ( resC != selC || selC[ 0 ][ 0 ] == clr[ selectArea.X ][ selectArea.Y ]))
    {
@@ -891,7 +894,8 @@ namespace CreativeModePlus
      for( j = 0; j < selectArea.Height; j++ )
      {
       clr[ i + selectArea.X ][ j + selectArea.Y ] = selC[ i ][ j ];
-      map[ i + selectArea.Y ][ j + selectArea.Y ] = selB[ i ][ j ];
+      map[ i + selectArea.X ][ j + selectArea.Y ] = selB[ i ][ j ];
+      selC[ i ][ j ] = -1;
 
      }
     }
@@ -902,9 +906,6 @@ namespace CreativeModePlus
   {
    if( e == MouseButtons.Left )
    {
-    if( Undo.peek() != "Move" )
-     Undo.add( new ElemUndo( selectArea, clr, lyr, map, "Move" ));
-
     clearSelect();
 
     selectArea.X += pt.X - prev.X;
@@ -923,7 +924,8 @@ namespace CreativeModePlus
 
    for( pt.X = selectArea.X; pt.X < selectArea.Right; pt.X++ )
     for( pt.Y = selectArea.Y; pt.Y < selectArea.Bottom; pt.Y++ )
-     setPixel( pt, clr[ pt.X ][ pt.Y ]);
+     if( pt.X < LoadSave.W && pt.Y < LoadSave.H ) 
+      setPixel( pt, clr[ pt.X ][ pt.Y ]);
 
   }
 
@@ -933,10 +935,9 @@ namespace CreativeModePlus
    int i, j;
 
    for( pt.X = selectArea.X, i = 0; pt.X < selectArea.Right; pt.X++, i++ )
-    if( pt.X < LoadSave.W )
-     for( pt.Y = selectArea.Y, j = 0; pt.Y < selectArea.Bottom; pt.Y++, j++ )
-      if( pt.Y < LoadSave.H ) 
-       setPixel( pt, mixColor( selC[ i ][ j ], disp ));
+    for( pt.Y = selectArea.Y, j = 0; pt.Y < selectArea.Bottom; pt.Y++, j++ )
+     if( pt.X < LoadSave.W && pt.Y < LoadSave.H ) 
+      setPixel( pt, mixColor( selC[ i ][ j ], disp ));
   }
 
   public void copy()
@@ -1018,6 +1019,13 @@ namespace CreativeModePlus
      }
     }
    }
+  }
+
+  public void flatten()
+  {
+   if( selC != null && selC[ 0 ][ 0 ] != -1 )
+    upSelect( Point.Empty );
+
   }
  }
 }

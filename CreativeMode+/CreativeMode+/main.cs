@@ -177,12 +177,10 @@ namespace CreativeModePlus
 
   private void mapImage_MouseMove( object sender, MouseEventArgs e )
   {
-   if( Tools.Tool.Img != null )
-   {
+   if( !LoadSave.threadRunning && Tools.Tool.Img != null )
     Tools.Tool.getBlockInfo( mnuBlock, e.Location );
-    mnuCoord.Text = "( " + e.Location.X + ", " + e.Location.Y + " )";
 
-   }
+   mnuCoord.Text = "( " + e.Location.X + ", " + e.Location.Y + " )";
 
    if( prev.X == -1 )
     prev = e.Location;
@@ -199,8 +197,8 @@ namespace CreativeModePlus
   {
    pnlImage.AutoScrollOffset = prevScrl;
 
-   if( !pnlImage.Focused )
-    pnlImage.Focus();
+   //if( !pnlImage.Focused )
+   // pnlImage.Focus();
 
    if( Tools.Initialized )
     Cursor = Tools.getCursor();
