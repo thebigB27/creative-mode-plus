@@ -68,6 +68,9 @@ namespace CreativeModePlus
 
   private static void changeTool( Button pressed )
   {
+   if( name == "Move" )
+    use.flatten();
+
    switch( pressed.Name )
    {
     case "btnSelect":

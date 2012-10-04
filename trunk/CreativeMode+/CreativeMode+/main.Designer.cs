@@ -48,7 +48,6 @@ namespace CreativeModePlus
    cutMenu = new ToolStripMenuItem();
    pasteMenu = new ToolStripMenuItem();
    viewToolStripMenuItem = new ToolStripMenuItem();
-   colorMenu = new ToolStripMenuItem();
    toolsMenu = new ToolStripMenuItem();
    mapToolStripMenuItem = new ToolStripMenuItem();
    regionMenu = new ToolStripMenuItem();
@@ -172,19 +171,10 @@ namespace CreativeModePlus
    // 
    // viewToolStripMenuItem
    // 
-   viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
-            colorMenu,
-            toolsMenu });
+   viewToolStripMenuItem.DropDownItems.Add( toolsMenu );
    viewToolStripMenuItem.Name = "viewToolStripMenuItem";
    viewToolStripMenuItem.Size = new Size(44, 23);
    viewToolStripMenuItem.Text = "&View";
-   // 
-   // colorMenu
-   // 
-   colorMenu.Name = "colorMenu";
-   colorMenu.ShortcutKeys = ((Keys)((Keys.Control | Keys.L)));
-   colorMenu.Size = new Size(193, 22);
-   colorMenu.Text = "&Color Schemes";
    // 
    // toolsMenu
    // 
@@ -451,7 +441,6 @@ namespace CreativeModePlus
   private ToolStripMenuItem cutMenu;
   private ToolStripMenuItem pasteMenu;
   private ToolStripMenuItem viewToolStripMenuItem;
-  private ToolStripMenuItem colorMenu;
   private ToolStripMenuItem toolsMenu;
   private ToolStripMenuItem helpToolStripMenuItem;
   private ToolStripMenuItem aboutMenu;
