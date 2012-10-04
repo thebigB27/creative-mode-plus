@@ -237,11 +237,7 @@ namespace CreativeModePlus
     l.map[ x ] = new AlphaBlock[ hgt ];
 
     for( z = 0; z < hgt; z++ )
-    {
-     l.clr[ x ][ z ] = -65281; //0xffff00ff
-     l.lyr[ x ][ z ] = 0;
-
-    }
+     l.lyr[ x ][ z ] = 0;   
 
     mnuLoad.Increment( hgt );
  
@@ -318,7 +314,8 @@ namespace CreativeModePlus
     for( Y = 0; Y < hgt; Y++ )
     {
      for( X = 0; X < wid; X++ )
-      chg[ Y * wid + X ] = Tools.Tool.Clr[ X ][ Y ];
+      chg[ Y * wid + X ] = Tools.Tool.mixColor( Tools.Tool.Clr[ X ][ Y ],
+                                                Tools.Tool.Lyr[ X ][ Y ]);
 
      mnuLoad.Increment( hgt );
 
