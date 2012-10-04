@@ -51,6 +51,7 @@ namespace CreativeModePlus
   
   public float Scale{ get{ return scl; } set{ scl = value; }}
   public int[][] Clr{ get{ return clr; }}
+  public int[][] Lyr{ get{ return lyr; }}
   public AlphaBlock[][] Map{ get{ return map; }}
   public Bitmap Img{ get{ return img; }}
   public Point[][] affected{ get{ return toolArea; }}
