@@ -209,7 +209,10 @@ namespace CreativeModePlus
    
    catch( Exception e )
    {
-    ;
+    MessageBox.Show( e.ToString(),
+                     "Stopping Threads",
+                     MessageBoxButtons.OK,
+                     MessageBoxIcon.Error );
 
    }
   }
