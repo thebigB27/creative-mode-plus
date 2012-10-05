@@ -378,8 +378,7 @@ namespace CreativeModePlus
    {
     for( i = pt.X * w; i < w + pt.X * w; i++ )
     {
-     b = j * imgWid + i;
-     chg[ b ] = plcClr;
+     chg[ j * imgWid + i ] = plcClr;
 
     }
    }
@@ -728,7 +727,8 @@ namespace CreativeModePlus
        else
         setPixel( loc, mixColor( plcCol, lyr[ loc.X ][ loc.Y ]));
 
-       map[ loc.X ][ loc.Y ] = plc;
+       if( clr[ loc.X ][ loc.Y ] != -65281 )
+        map[ loc.X ][ loc.Y ] = plc;
 
       }
      }
@@ -741,19 +741,20 @@ namespace CreativeModePlus
 
   private void fill( Point pt )
   {
-   int rep;
+   int rep = -1;
    
    if( img != null )
    {
     if( Undo.peek() != "Fill" )
      Undo.add( new ElemUndo( selectArea, clr, lyr, map, "Fill" ));
 
-    rep = map[ pt.X ][ pt.Y ].ID;
+    if( clr[ pt.X ][ pt.Y ] != -65281 )
+     rep = map[ pt.X ][ pt.Y ].ID;
 
-    if( Control.ModifierKeys == Keys.Shift )
+    if( rep != -1 && Control.ModifierKeys == Keys.Shift )
      fillComplete( pt, rep );
 
-    else
+    else if( rep != 1 )
      fillPart( pt.X, pt.Y, rep );
 
     completeFill();
@@ -813,7 +814,7 @@ namespace CreativeModePlus
 
     for( i = pc.X; i < st.X; i++ )
      for( j = pc.Y; j < st.Y; j++ )
-      if( map[ i ][ j ].ID == rep )
+      if( clr[ i ][ j ] != -65281 && -map[ i ][ j ].ID == rep )
        lyr[ i ][ j ] = -16711936; // set to 0xff00ff00
 
    }
