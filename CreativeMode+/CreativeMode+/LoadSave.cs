@@ -15,8 +15,9 @@ namespace CreativeModePlus
 {
  class LoadSave
  {
+  private static bool init;
   private static bool needSave;
-  private static HScrollBar   mnuHeight;
+  private static ComboBox mnuHeight;
   private static ToolStripProgressBar mnuLoad;
   private static ToolStripStatusLabel mnuStatus;
   private static SelectRegion regDiag;
@@ -46,10 +47,11 @@ namespace CreativeModePlus
 
    }
   }
+  public static bool Init{ get{ return init; }}
 
   public static void openFile( Form plcType,
                                Form main,
-                               HScrollBar height,
+                               ComboBox height,
                                ToolStripProgressBar mLoad,
                                ToolStripStatusLabel mStatus )
   {
@@ -61,6 +63,7 @@ namespace CreativeModePlus
    mnuHeight = height;
    mnuLoad = mLoad;
    mnuStatus = mStatus;
+   init = true;
 
    plcType.Hide();
 
@@ -262,7 +265,7 @@ namespace CreativeModePlus
    mnuStatus.Text = "Loading Block Data";
 
    needSave = false;
-   y = mnuHeight.Value;
+   y = mnuHeight.SelectedIndex + 1;
 
    for( cx = 0; cx < cxd; cx++ )
    {

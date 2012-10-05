@@ -32,6 +32,7 @@ namespace CreativeModePlus
   /// </summary>
   private void InitializeComponent()
   {
+   int i;
    String fname = "CreativeModePlus.res.Minecraft-Icon.ico";
    Bitmap icon = new Bitmap( Asm.exe.GetManifestResourceStream( fname ));
    menuStrip1 = new MenuStrip();
@@ -53,9 +54,8 @@ namespace CreativeModePlus
    regionMenu = new ToolStripMenuItem();
    helpToolStripMenuItem = new ToolStripMenuItem();
    aboutMenu = new ToolStripMenuItem();
-   mnuHeight = new ToolStripTextBox();
    mnuScale = new ToolStripTextBox();
-   height = new HScrollBar();
+   height = new ComboBox();
    statusStrip1 = new StatusStrip();
    toolStripStatusLabel1 = new ToolStripStatusLabel();
    mnuLoad = new ToolStripProgressBar();
@@ -84,7 +84,6 @@ namespace CreativeModePlus
             viewToolStripMenuItem,
             mapToolStripMenuItem,
             helpToolStripMenuItem,
-            mnuHeight,
             mnuScale});
    menuStrip1.Location = new Point(0, 0);
    menuStrip1.Name = "menuStrip1";
@@ -218,14 +217,6 @@ namespace CreativeModePlus
    aboutMenu.Text = "&About";
    aboutMenu.Click += new EventHandler(aboutMenu_Click);
    // 
-   // mnuHeight
-   // 
-   mnuHeight.BackColor = Color.LightGray;
-   mnuHeight.Name = "mnuHeight";
-   mnuHeight.Size = new Size(25, 23);
-   mnuHeight.Text = "63";
-   mnuHeight.TextBoxTextAlign = HorizontalAlignment.Right;
-   // 
    // mnuScale
    // 
    mnuScale.BackColor = Color.LightGray;
@@ -233,18 +224,6 @@ namespace CreativeModePlus
    mnuScale.Size = new Size(50, 23);
    mnuScale.Text = "100%";
    mnuScale.TextBoxTextAlign = HorizontalAlignment.Right;
-   // 
-   // height
-   // 
-   height.Anchor = ((AnchorStyles)(((AnchorStyles.Top | AnchorStyles.Left) 
-            | AnchorStyles.Right)));
-   height.Location = new Point(0, 48);
-   height.Maximum = 264;
-   height.Name = "height";
-   height.Size = new Size(528, 20);
-   height.TabIndex = 2;
-   height.Value = 62;
-   height.ValueChanged += new EventHandler(height_ValueChanged);
    // 
    // statusStrip1
    // 
@@ -329,9 +308,9 @@ namespace CreativeModePlus
    pnlImage.AutoScroll = true;
    pnlImage.BackColor = SystemColors.Desktop;
    pnlImage.Controls.Add(mapImage);
-   pnlImage.Location = new Point(0, 68);
+   pnlImage.Location = new Point(0, 48);
    pnlImage.Name = "pnlImage";
-   pnlImage.Size = new Size(528, 530);
+   pnlImage.Size = new Size(528, 550);
    pnlImage.TabIndex = 4;
    pnlImage.Scroll += new ScrollEventHandler(pnlImage_Scroll);
    pnlImage.MouseWheel += new MouseEventHandler(frm_Wheel);
@@ -351,6 +330,14 @@ namespace CreativeModePlus
    mapImage.MouseMove += new MouseEventHandler(mapImage_MouseMove);
    mapImage.MouseUp += new MouseEventHandler(mapImage_Up);
    // 
+   // height
+   // 
+   height.Location = new Point(380, 27);
+   height.Name = "height";
+   height.Size = new Size(100, 21);
+   height.TabIndex = 2;
+   height.SelectedIndexChanged += new EventHandler(height_ValueChanged);
+   // 
    // cmbBlocks
    // 
    cmbBlocks.DrawMode = DrawMode.OwnerDrawFixed;
@@ -360,6 +347,8 @@ namespace CreativeModePlus
    cmbBlocks.Name = "cmbBlocks";
    cmbBlocks.Size = new Size(187, 21);
    cmbBlocks.TabIndex = 5;
+   for( i = 0; i < 256; i++ )
+    height.Items.Add( "" + ( i + 1 ));
    cmbBlocks.SelectedIndexChanged += new EventHandler(cmbBlocks_SelectedIndexChanged);
    // 
    // cmbPaint
@@ -447,7 +436,6 @@ namespace CreativeModePlus
   private ToolStripMenuItem mapToolStripMenuItem;
   private ToolStripMenuItem regionMenu;
   private ToolStripProgressBar mnuLoad;
-  private ToolStripTextBox mnuHeight;
   private ToolStripTextBox mnuScale;
   private StatusStrip statusStrip1;
   private ToolStripStatusLabel toolStripStatusLabel1;
@@ -457,7 +445,7 @@ namespace CreativeModePlus
   private ToolStripStatusLabel mnuBlock;
   private ToolStripStatusLabel mnuCoord;
   private ToolStripStatusLabel mnuStatus;
-  private HScrollBar height;
+  private ComboBox height;
   private Panel pnlImage;
   private ComboBoxWithIcons cmbBlocks;
   private PictureBox mapImage;

@@ -56,12 +56,13 @@ namespace CreativeModePlus
      cmbBlocks.Add( temp.Info.Name, Image.FromStream( file ), i );
 
     }
+
     if( i != 0 && i < 33 )
     {
      file = Asm.exe.GetManifestResourceStream( bname + i + "x" + i + ".png" );
      cmbPaint.Add( "" + i, Image.FromStream( file ), i - 1 );
 
-    }
+    }    
    }
 
    prev = new Point( -1, -1 );
@@ -69,23 +70,23 @@ namespace CreativeModePlus
 
    cmbBlocks.SelectedIndex = cmbPaint.SelectedIndex = 0;
 
-   prevVal = 63;
+   prevVal = 62;
+   height.SelectedIndex = 62;
 
   }
 
   private void height_ValueChanged( object sender, EventArgs e )
   {
-   if( !LoadSave.threadRunning )
+   if( LoadSave.Init && !LoadSave.threadRunning )
    {
-    mnuHeight.Text = "" + ( height.Value + 1 );
-    prevVal = height.Value;
+    prevVal = height.SelectedIndex;
    
     LoadSave.changeLayer( false );
 
    }
 
-   else if( height.Value != prevVal )
-    height.Value = prevVal;
+   else if( height.SelectedIndex != prevVal )
+    height.SelectedIndex = prevVal;
    
   }
 
@@ -197,8 +198,8 @@ namespace CreativeModePlus
   {
    pnlImage.AutoScrollOffset = prevScrl;
 
-   //if( !pnlImage.Focused )
-   // pnlImage.Focus();
+   if( !pnlImage.Focused )
+    pnlImage.Focus();
 
    if( Tools.Initialized )
     Cursor = Tools.getCursor();
