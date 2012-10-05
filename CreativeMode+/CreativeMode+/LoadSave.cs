@@ -242,7 +242,7 @@ namespace CreativeModePlus
 
     for( z = 0; z < hgt; z++ )
     {
-     l.clr[ x ][ z ] = 0;
+     l.clr[ x ][ z ] = -65281;
      l.lyr[ x ][ z ] = 0;   
 
     }
