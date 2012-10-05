@@ -241,8 +241,11 @@ namespace CreativeModePlus
     l.map[ x ] = new AlphaBlock[ hgt ];
 
     for( z = 0; z < hgt; z++ )
+    {
+     l.clr[ x ][ z ] = 0;
      l.lyr[ x ][ z ] = 0;   
 
+    }
     mnuLoad.Increment( hgt );
  
    }
