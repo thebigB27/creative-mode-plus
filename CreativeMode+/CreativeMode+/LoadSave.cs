@@ -149,8 +149,9 @@ namespace CreativeModePlus
    if( region != null )
    {
     pReg = region;
-    reg  = (( AnvilRegion )
-              lvl.GetRegionManager().GetRegion( region[ 0 ], region[ 1 ]));
+    if( reg != null )
+     reg.Dispose();
+
     changeLayer( first );
 
    }
@@ -262,10 +263,12 @@ namespace CreativeModePlus
    if( needSave )
     saveLayers();
 
+   reg  = (( AnvilRegion )
+              lvl.GetRegionManager().GetRegion( region[ 0 ], region[ 1 ]));
    mnuStatus.Text = "Loading Block Data";
 
    needSave = false;
-   y = mnuHeight.SelectedIndex + 1;
+   y = mnuHeight.SelectedIndex;
 
    for( cx = 0; cx < cxd; cx++ )
    {
@@ -282,6 +285,9 @@ namespace CreativeModePlus
         mx = cx * xd + x;
         mz = cz * zd + z;
         temp = chk.GetBlock( x, y, z );
+        if( Tools.Tool.Map[ mx ][ mz ] != null &&
+            Tools.Tool.Map[ mx ][ mz ].ID != temp.ID )
+         x += 0;
         Tools.Tool.Map[ mx ][ mz ] = temp;
         Tools.Tool.Clr[ mx ][ mz ] = getBlockColor( temp );
 
