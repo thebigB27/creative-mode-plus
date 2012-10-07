@@ -19,7 +19,7 @@ namespace CreativeModePlus
 
   }
 
-  private static void initBlockColors()
+  public static void initBlockColors()
   {
    blockColors = new int[ 137 ];
    

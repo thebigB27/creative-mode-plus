@@ -73,6 +73,8 @@ namespace CreativeModePlus
    prevVal = 62;
    height.SelectedIndex = 62;
 
+   BlockColor.initBlockColors();
+
   }
 
   private void height_ValueChanged( object sender, EventArgs e )

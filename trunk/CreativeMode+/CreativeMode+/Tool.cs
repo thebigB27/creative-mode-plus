@@ -368,7 +368,7 @@ namespace CreativeModePlus
 
   private void setPixel( Point pt, int plcClr )
   {
-   int b, i, j, w = (( int ) scl ), imgWid;
+   int i, j, w = (( int ) scl ), imgWid;
 
    imgChg = img.LockBits( srcBox, ImageLockMode.ReadWrite, img.PixelFormat );
    int* chg = (( int* ) imgChg.Scan0 );
