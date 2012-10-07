@@ -259,7 +259,7 @@ namespace CreativeModePlus
 
   private static void loadLayers()
   {
-   AlphaBlockCollection chk = null;
+   AlphaBlockCollection blk = null;
    AlphaBlock temp;
    int x, z, cx, cz, mx, mz;
 
@@ -279,7 +279,7 @@ namespace CreativeModePlus
     {
      if( reg.ChunkExists( cx, cz ))
      {
-      chk = reg.GetChunkRef( cx, cz ).Blocks;
+      blk = reg.GetChunkRef( cx, cz ).Blocks;
 
       for( x = 0; x < xd; x++ )
       {
@@ -287,22 +287,18 @@ namespace CreativeModePlus
        {
         mx = cx * xd + x;
         mz = cz * zd + z;
-        temp = chk.GetBlock( x, y, z );
-        if( Tools.Tool.Map[ mx ][ mz ] != null &&
-            Tools.Tool.Map[ mx ][ mz ].ID != temp.ID )
-         x += 0;
+        temp = blk.GetBlock( x, y, z );
         Tools.Tool.Map[ mx ][ mz ] = temp;
-        Tools.Tool.Clr[ mx ][ mz ] = getBlockColor( temp );
+        Tools.Tool.Clr[ mx ][ mz ] = BlockColor.getBlockColor( temp.ID );
 
        }
-
-       mnuLoad.Increment( zd );
-
       }
+
+      mnuLoad.Increment( xd * zd );
+
      }
     }
    }
-
    mnuLoad.Increment( -hgt * wid );
 
    loadImage();
@@ -329,8 +325,6 @@ namespace CreativeModePlus
       chg[ Y * wid + X ] = Tools.Tool.mixColor( Tools.Tool.Clr[ X ][ Y ],
                                                 Tools.Tool.Lyr[ X ][ Y ]);
 
-     mnuLoad.Increment( hgt );
-
     }
    }
 
@@ -338,7 +332,6 @@ namespace CreativeModePlus
 
    Tools.Tool.showImage( img );
 
-   mnuLoad.Increment( -hgt * wid );
    mnuStatus.Text = "Not Loading";
 
   }
@@ -363,10 +356,9 @@ namespace CreativeModePlus
        for( z = 0; z < zd; z++ )
         chk.SetBlock( x, y, z, Tools.Tool.Map[ cx * xd + x ][ cz * zd + z ]);
 
-       mnuLoad.Increment( zd );
-
       }
-
+      
+      mnuLoad.Increment( xd * zd );
       reg.Save();
 
      }
@@ -375,12 +367,6 @@ namespace CreativeModePlus
 
    mnuLoad.Increment( -hgt * wid );
    mnuStatus.Text = "Not Loading";
-
-  }
-
-  private static int getBlockColor( AlphaBlock blk )
-  {
-   return BlockColor.getBlockColor( blk.ID );
 
   }
  }
