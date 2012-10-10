@@ -148,8 +148,11 @@ namespace CreativeModePlus
      showImage( newImg );
 
     else
+    {
+     img.Dispose();
      img = newImg;
 
+    }
    }
   }
 
