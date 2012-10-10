@@ -45,6 +45,8 @@ namespace CreativeModePlus
    undoMenu = new ToolStripMenuItem();
    redoMenu = new ToolStripMenuItem();
    toolStripSeparator2 = new ToolStripSeparator();
+   deselMenu = new ToolStripMenuItem();
+   toolStripSeparator3 = new ToolStripSeparator();
    copyMenu = new ToolStripMenuItem();
    cutMenu = new ToolStripMenuItem();
    pasteMenu = new ToolStripMenuItem();
@@ -137,19 +139,29 @@ namespace CreativeModePlus
             undoMenu,
             redoMenu,
             toolStripSeparator2,
+            deselMenu,
+            toolStripSeparator3,
             copyMenu,
             cutMenu,
             pasteMenu});
    editToolStripMenuItem.Name = "editToolStripMenuItem";
    editToolStripMenuItem.Size = new Size(39, 23);
    editToolStripMenuItem.Text = "&Edit";
+   //
+   // deselMenu
+   //
+   deselMenu.Name = "deselMenu";
+   deselMenu.ShortcutKeys = (( Keys )( Keys.Control | Keys.D ));
+   deselMenu.Size = new Size( 152, 22 );
+   deselMenu.Text = "&Deselect";
+   deselMenu.Click += new EventHandler( deselMenu_Click );
    // 
    // copyMenu
    // 
    copyMenu.Name = "copyMenu";
    copyMenu.ShortcutKeys = ((Keys)((Keys.Control | Keys.C)));
    copyMenu.Size = new Size(152, 22);
-   copyMenu.Text = "&Copy";
+   copyMenu.Text = "C&opy";
    copyMenu.Click += new EventHandler( copyMenu_Click );
    // 
    // cutMenu
@@ -157,7 +169,7 @@ namespace CreativeModePlus
    cutMenu.Name = "cutMenu";
    cutMenu.ShortcutKeys = ((Keys)((Keys.Control | Keys.X)));
    cutMenu.Size = new Size(152, 22);
-   cutMenu.Text = "&Cut";
+   cutMenu.Text = "C&ut";
    cutMenu.Click += new EventHandler( cutMenu_Click );
    // 
    // pasteMenu
@@ -426,6 +438,8 @@ namespace CreativeModePlus
   private ToolStripMenuItem undoMenu;
   private ToolStripMenuItem redoMenu;
   private ToolStripSeparator toolStripSeparator2;
+  private ToolStripMenuItem deselMenu;
+  private ToolStripSeparator toolStripSeparator3;
   private ToolStripMenuItem copyMenu;
   private ToolStripMenuItem cutMenu;
   private ToolStripMenuItem pasteMenu;
