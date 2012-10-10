@@ -113,6 +113,8 @@ namespace CreativeModePlus
 
    srcBox = new Rectangle( Point.Empty, inMap.Size );
 
+   scaleImage( 0 );
+
    display.Size = img.Size;
    display.Image = img;
 
@@ -126,8 +128,6 @@ namespace CreativeModePlus
 
    if( img != null )
    {
-    removeSelection();
-
     if( delta < 0 && img.Size.Width > 512  )
      scl -= 1.0f;
 
@@ -144,10 +144,11 @@ namespace CreativeModePlus
     g.DrawImage( img, 0, 0, pt.X, pt.Y );
     g.Dispose();
 
-    showImage( newImg );
+    if( delta != 0 )
+     showImage( newImg );
 
-    if( origin.X != -1 )
-     setRect( new Point( -1, -1 ));
+    else
+     img = newImg;
 
    }
   }
@@ -160,7 +161,7 @@ namespace CreativeModePlus
    {
     for( pt.Y = 0; pt.Y < LoadSave.H; pt.Y++ )
     {
-     lyr[ pt.Y ][ pt.Y ] = 0x00000000;
+     lyr[ pt.Y ][ pt.Y ] = 0;
      setPixel( pt, clr[ pt.X ][ pt.Y ]);
 
     }
