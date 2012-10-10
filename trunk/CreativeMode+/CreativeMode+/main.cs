@@ -79,7 +79,9 @@ namespace CreativeModePlus
 
   private void height_ValueChanged( object sender, EventArgs e )
   {
-   if( LoadSave.Init && !LoadSave.threadRunning )
+   if( LoadSave.Init &&
+       !LoadSave.threadRunning &&
+       height.SelectedIndex != prevVal )
    {
     prevVal = height.SelectedIndex;
    
@@ -90,6 +92,14 @@ namespace CreativeModePlus
    else if( height.SelectedIndex != prevVal )
     height.SelectedIndex = prevVal;
    
+  }
+
+  private void deselMenu_Click( object sender, EventArgs e )
+  {
+   if( Tools.Tool.Img != null &&
+       !LoadSave.threadRunning )
+    Tools.Tool.killSelect();
+
   }
 
   private void exitMenu_Click(object sender, EventArgs e)

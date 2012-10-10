@@ -340,7 +340,7 @@ namespace CreativeModePlus
    switch( cmd )
    {
     case "Select":
-     toRet = killSelect;
+     toRet = dumClick;
      
     break;
 
@@ -529,37 +529,23 @@ namespace CreativeModePlus
 
   public void setRect( Point lr )
   {
-   int w, h;
-   Point pt = Point.Empty;
+   int w = Math.Abs( lr.X - selectArea.X ) + 1,
+       h = Math.Abs( lr.Y - selectArea.Y ) + 1;
+   Point pt = new Point(( lr.X < selectArea.X ) ? lr.X : -1,
+                        ( lr.Y < selectArea.Y ) ? lr.Y : -1 );
 
-   if( lr.X == -1 )
-   {
-    w = selectArea.Width;
-    h = selectArea.Height;
+   if( pt.X != -1 )
+    selectArea.X = pt.X;
 
-   }
+   if( pt.Y != -1 )
+    selectArea.Y = pt.Y;
    
-   else
-   {
-    w = Math.Abs( lr.X - selectArea.X ) + 1;
-    h = Math.Abs( lr.Y - selectArea.Y ) + 1;
-    pt.X = ( lr.X < selectArea.X ) ? lr.X : -1;
-    pt.Y = ( lr.Y < selectArea.Y ) ? lr.Y : -1;
+   selectArea.Width  = w;
+   selectArea.Height = h;
+   w += selectArea.X;
+   h += selectArea.Y;
 
-    if( pt.X != -1 )
-     selectArea.X = pt.X;
-
-    if( pt.Y != -1 )
-     selectArea.Y = pt.Y;
-   
-    selectArea.Width  = w;
-    selectArea.Height = h;
-    w += selectArea.X;
-    h += selectArea.Y;
-
-    createSelectMover();
-
-   }
+   createSelectMover();
 
    for( pt.X = selectArea.X; pt.X < w; pt.X++ )
    {
@@ -581,7 +567,7 @@ namespace CreativeModePlus
     Undo.add( new ElemUndo( selectArea, clr, lyr, map, "Select" ));
 
    if( selectArea.Width != 0 )
-    killSelect( or );
+    killSelect();
 
    origin.X = or.X;
    origin.Y = or.Y;
@@ -590,7 +576,7 @@ namespace CreativeModePlus
 
   }
 
-  private void killSelect( Point xx )
+  public void killSelect()
   {
    Point pt = Point.Empty;
 
@@ -978,7 +964,7 @@ namespace CreativeModePlus
     Point pt = selectArea.Location;
 
     Undo.add( new ElemUndo( selectArea, clr, lyr, map, "Cut" ));
-    killSelect( pt );
+    killSelect();
 
     resC = new int[ selectArea.Width ][];
     resB = new AlphaBlock[ selectArea.Width ][];
@@ -1008,7 +994,7 @@ namespace CreativeModePlus
     Point pt = Point.Empty;
     
     Undo.add( new ElemUndo( selectArea, clr, lyr, map, "Paste" ));
-    killSelect( pt );
+    killSelect();
 
     selectArea.Location = Point.Empty;
     selectArea.Size     = new Size( resC.Length, resC[ 0 ].Length );
