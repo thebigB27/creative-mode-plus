@@ -30,16 +30,15 @@ namespace CreativeModePlus
 
   public static int disp, disp2;
   
-  private float scl;
   private int[][] clr = null,
                   selC = null,
                   resC = null,
                   lyr = null;
-  private int plcCol;
-  private AlphaBlock[][] map = null,
-                         selB = null,
-                         resB = null;
-  private AlphaBlock plc = null;
+  private int plcCol, scl;
+  private Block[][] map = null,
+                    selB = null,
+                    resB = null;
+  private Block plc;
   private Bitmap img = null;
   private BitmapData imgChg = null;
   private PictureBox display;
@@ -49,10 +48,10 @@ namespace CreativeModePlus
                     srcBox;
   private Size toolSize;
   
-  public float Scale{ get{ return scl; } set{ scl = value; }}
+  public int Scale{ get{ return scl; } set{ scl = value; }}
   public int[][] Clr{ get{ return clr; }}
   public int[][] Lyr{ get{ return lyr; }}
-  public AlphaBlock[][] Map{ get{ return map; }}
+  public Block[][] Map{ get{ return map; }}
   public Bitmap Img{ get{ return img; }}
   public Point[][] affected{ get{ return toolArea; }}
   public Point Origin{ get{ return origin; } set{ origin = value; }}
@@ -70,9 +69,9 @@ namespace CreativeModePlus
    selectArea = new Rectangle( -1, -1, 0, 0 );
    origin     = new Point( -1, -1 );
    display    = dis;
-   scl        = 1.0f;
+   scl        = 1;
 
-   disp = 0x40ff0094;
+   disp = 1090453652;
    disp2 = -1795227500;
 
   }
@@ -99,6 +98,7 @@ namespace CreativeModePlus
     for( pt.Y = 0; pt.Y < LoadSave.H; pt.Y++)
      setPixel( pt, mixColor( clr[ pt.X ][ pt.Y ], lyr[ pt.X ][ pt.Y ]));
 
+   display.Size = img.Size;
    display.Image = img;
 
   }
@@ -115,44 +115,26 @@ namespace CreativeModePlus
 
    scaleImage( 0 );
 
-   display.Size = img.Size;
-   display.Image = img;
-
   }
-
+  
   public void scaleImage( int delta )
   {
-   Bitmap newImg;
-   Graphics g;
    Point pt = Point.Empty;
 
    if( img != null )
    {
-    if( delta < 0 && img.Size.Width > 512  )
-     scl -= 1.0f;
+    img.Dispose();
 
-    else if( delta > 0 && img.Size.Width < 8096 )
-     scl += 1.0f;
+    if( delta < 0 && scl > 1 )
+     scl -= 1;
 
-    pt.X = ( int )( LoadSave.W * scl );
-    pt.Y = ( int )( LoadSave.H * scl );
+    else if( delta > 0 && scl < 8 )
+     scl += 1;
 
-    newImg = new Bitmap( pt.X, pt.Y );
-    g = Graphics.FromImage( newImg );
-    g.InterpolationMode = InterpolationMode.NearestNeighbor;
-    g.SmoothingMode = SmoothingMode.None;
-    g.DrawImage( img, 0, 0, pt.X, pt.Y );
-    g.Dispose();
+    img = new Bitmap( LoadSave.W * scl, LoadSave.H * scl );
+   
+    refreshImage();
 
-    if( delta != 0 )
-     showImage( newImg );
-
-    else
-    {
-     img.Dispose();
-     img = newImg;
-
-    }
    }
   }
 
@@ -204,7 +186,7 @@ namespace CreativeModePlus
        aPt.Y > -1 && aPt.Y < LoadSave.H )
    {
     if( clr[ aPt.X ][ aPt.Y ] != -65281 )
-     block.Text = map[ aPt.X ][ aPt.Y ].Info.Name;
+     block.Text = "" + (( BlockNames ) map[ aPt.X ][ aPt.Y ].ID );
 
     else
      block.Text = "Unavailable";
@@ -214,9 +196,11 @@ namespace CreativeModePlus
 
   public void setBlockType( int ID, Form main )
   {
-   plc = new AlphaBlock( ID );
+   AddData.getData( ID, main );
    
-   new AddData( plc, main ).Close();
+   plc.ID = AddData.Data.ID;
+   plc.Data = AddData.Data.Data;
+   plc.ent = AddData.Data.ent;
 
    plcCol = BlockColor.getBlockColor( ID );
 
@@ -372,17 +356,23 @@ namespace CreativeModePlus
 
   private void setPixel( Point pt, int plcClr )
   {
-   int i, j, w = (( int ) scl ), imgWid;
+   int i, j, imgWid;
 
    imgChg = img.LockBits( srcBox, ImageLockMode.ReadWrite, img.PixelFormat );
    int* chg = (( int* ) imgChg.Scan0 );
    imgWid = imgChg.Stride / 4;
 
-   for( j = pt.Y * w; j < w + pt.Y * w; j++ )
+   for( j = pt.Y * scl; j < scl + pt.Y * scl; j++ )
    {
-    for( i = pt.X * w; i < w + pt.X * w; i++ )
+    for( i = pt.X * scl; i < scl + pt.X * scl; i++ )
     {
-     chg[ j * imgWid + i ] = plcClr;
+     if( scl == 1 ||
+       (( i % scl != 0 || j % 2 != 0 ) &&
+       ( j % scl != 0 || i % 2 != 0 )))
+      chg[ j * imgWid + i ] = plcClr;
+
+     else if(( i % scl == 0 && j % 2 == 0 ) || ( j % scl == 0 && i % 2 == 0 ))
+      chg[ j * imgWid + i ] = mixColor( plcClr, 1056964608 );//0x3f000000
 
     }
    }
@@ -505,7 +495,7 @@ namespace CreativeModePlus
 
   public Point adj( Point loc, bool comp )
   {
-   Point toRet = new Point(( int )( loc.X / scl ), ( int )( loc.Y / scl ));
+   Point toRet = new Point( loc.X / scl, loc.Y / scl );
 
    if( comp )
    {
@@ -529,21 +519,18 @@ namespace CreativeModePlus
 
   public void setRect( Point lr )
   {
-   int w = Math.Abs( lr.X - selectArea.X ) + 1,
-       h = Math.Abs( lr.Y - selectArea.Y ) + 1;
-   Point pt = new Point(( lr.X < selectArea.X ) ? lr.X : -1,
-                        ( lr.Y < selectArea.Y ) ? lr.Y : -1 );
-
-   if( pt.X != -1 )
-    selectArea.X = pt.X;
-
-   if( pt.Y != -1 )
-    selectArea.Y = pt.Y;
+   int w, h;
+   Point pt;
+  
+   pt = new Point(( lr.X < selectArea.X ) ? lr.X : selectArea.X,
+                  ( lr.Y < selectArea.Y ) ? lr.Y : selectArea.Y );
    
-   selectArea.Width  = w;
-   selectArea.Height = h;
-   w += selectArea.X;
-   h += selectArea.Y;
+   selectArea.Width  = Math.Abs( lr.X - selectArea.X ) + 1;
+   selectArea.Height = Math.Abs( lr.Y - selectArea.Y ) + 1;
+   selectArea.X = pt.X;
+   selectArea.Y = pt.Y;
+   w = selectArea.Right;
+   h = selectArea.Bottom;
 
    createSelectMover();
 
@@ -718,8 +705,12 @@ namespace CreativeModePlus
         setPixel( loc, mixColor( plcCol, lyr[ loc.X ][ loc.Y ]));
 
        if( clr[ loc.X ][ loc.Y ] != -65281 )
-        map[ loc.X ][ loc.Y ] = plc;
+       {
+        map[ loc.X ][ loc.Y ].ID = plc.ID;
+        map[ loc.X ][ loc.Y ].Data = plc.Data;
+        map[ loc.X ][ loc.Y ].ent = plc.ent;
 
+       }
       }
      }
     }
@@ -744,7 +735,7 @@ namespace CreativeModePlus
     if( rep != -1 && Control.ModifierKeys == Keys.Shift )
      fillComplete( pt, rep );
 
-    else if( rep != 1 )
+    else if( rep != -1 )
      fillPart( pt.X, pt.Y, rep );
 
     completeFill();
@@ -804,7 +795,7 @@ namespace CreativeModePlus
 
     for( i = pc.X; i < st.X; i++ )
      for( j = pc.Y; j < st.Y; j++ )
-      if( clr[ i ][ j ] != -65281 && -map[ i ][ j ].ID == rep )
+      if( clr[ i ][ j ] != -65281 && map[ i ][ j ].ID == rep )
        lyr[ i ][ j ] = -16711936; // set to 0xff00ff00
 
    }
@@ -821,13 +812,15 @@ namespace CreativeModePlus
      if( lyr[ pt.X ][ pt.Y ] == -16711936 ) //check for 0xff00ff00
      {
       if( selectArea.Width == 0 )
-       lyr[ pt.X ][ pt.Y ] = 0x00000000;
+       lyr[ pt.X ][ pt.Y ] = 0;
 
       else
        lyr[ pt.X ][ pt.Y ] = disp;
 
       clr[ pt.X ][ pt.Y ] = plcCol;
-      map[ pt.X ][ pt.Y ] = plc;
+      map[ pt.X ][ pt.Y ].ID = plc.ID;
+      map[ pt.X ][ pt.Y ].Data = plc.Data;
+      map[ pt.X ][ pt.Y ].ent = plc.ent;
 
       setPixel( pt, mixColor( plcCol, lyr[ pt.X ][ pt.Y ]));
 
@@ -838,37 +831,48 @@ namespace CreativeModePlus
 
   private void createSelectMover()
   {
-   int i;
+   int i, j;
 
-   selB = new AlphaBlock[ selectArea.Width ][];
+   selB = new Block[ selectArea.Width ][];
    selC = new int[ selectArea.Width ][];
+
+   GC.Collect();
 
    for( i = 0; i < selectArea.Width; i++ )
    {
-    selB[ i ] = new AlphaBlock[ selectArea.Height ];
+    selB[ i ] = new Block[ selectArea.Height ];
     selC[ i ] = new int[ selectArea.Height ];
 
+    for( j = 0; j < selectArea.Height; j++ )
+    {
+     selC[ i ][ j ] = -65281;
+     selB[ i ][ j ] = new Block();
+
+    }
    }
   }
   
   private void downSelect( Point pt )
   {
-   int i, j;
+   int i, j, x, y;
 
    if( Undo.peek() != "Move" )
      Undo.add( new ElemUndo( selectArea, clr, lyr, map, "Move" ));
 
-   if( selectArea.Width != 0 &&
-     ( resC != selC || selC[ 0 ][ 0 ] == clr[ selectArea.X ][ selectArea.Y ]))
+   if( selectArea.Width != 0 && selC[ 0 ][ 0 ] == -65281 )
    {
     for( i = 0; i < selectArea.Width; i++ )
     {
      for( j = 0; j < selectArea.Height; j++ )
      {
-      selC[ i ][ j ] = clr[ i + selectArea.X ][ j + selectArea.Y ];
-      selB[ i ][ j ] = map[ i + selectArea.Y ][ j + selectArea.Y ];
-      clr[ i + selectArea.X ][ j + selectArea.Y ] = -1;
-      map[ i + selectArea.X ][ j + selectArea.Y ] = new AlphaBlock( 0 );
+      x = i + selectArea.X;
+      y = j + selectArea.Y;
+      selC[ i ][ j ] = clr[ x ][ y ];
+      selB[ i ][ j ] = map[ x ][ y ];
+      clr[ x ][ y ] = -1;
+      map[ x ][ y ].Data = map[ x ][ y ].ID = 0;
+      map[ x ][ y ].ent = null;
+      lyr[ x ][ y ] = 0;
 
      }
     }
@@ -877,7 +881,7 @@ namespace CreativeModePlus
 
   private void upSelect( Point pt )
   {
-   int i, j;
+   int i, j, x, y;
 
    if( selectArea.Width != 0 )
    {
@@ -885,9 +889,12 @@ namespace CreativeModePlus
     {
      for( j = 0; j < selectArea.Height; j++ )
      {
-      clr[ i + selectArea.X ][ j + selectArea.Y ] = selC[ i ][ j ];
-      map[ i + selectArea.X ][ j + selectArea.Y ] = selB[ i ][ j ];
-      selC[ i ][ j ] = -1;
+      x = i + selectArea.X;
+      y = j + selectArea.Y;
+      clr[ x ][ y ] = selC[ i ][ j ];
+      map[ x ][ y ] = selB[ i ][ j ];
+      lyr[ x ][ y ] = disp;
+      selC[ i ][ j ] = -65281;
 
      }
     }
@@ -930,26 +937,51 @@ namespace CreativeModePlus
     for( pt.Y = selectArea.Y, j = 0; pt.Y < selectArea.Bottom; pt.Y++, j++ )
      if( pt.X < LoadSave.W && pt.Y < LoadSave.H ) 
       setPixel( pt, mixColor( selC[ i ][ j ], disp ));
+
+  }
+
+  private void createCopy()
+  {
+   int i, j;
+
+   if( resC == null || ( resC.Length != selC.Length ))
+   {
+    resB = new Block[ selectArea.Width ][];
+    resC = new int[ selectArea.Width ][];
+
+    GC.Collect();
+
+    for( i = 0; i < selectArea.Width; i++ )
+    {
+     resB[ i ] = new Block[ selectArea.Height ];
+     resC[ i ] = new int[ selectArea.Height ];
+
+     for( j = 0; j < selectArea.Height; j++ )
+     {
+      resC[ i ][ j ] = -65281;
+      resB[ i ][ j ] = new Block();
+
+     }
+    }
+   }
   }
 
   public void copy()
   {
    if( selectArea.Width != 0 )
    {
-    int i, j;
+    int i, j, x, y;
 
-    resC = new int[ selectArea.Width ][];
-    resB = new AlphaBlock[ selectArea.Width ][];
+    createCopy();
 
     for( i = 0; i < selectArea.Width; i++ )
     {
-     resC[ i ] = new int[ selectArea.Height ];
-     resB[ i ] = new AlphaBlock[ selectArea.Height ];
-
      for( j = 0; j < selectArea.Height; j++ )
      {
-      resC[ i ][ j ] = clr[ i + selectArea.X ][ j + selectArea.Y ];
-      resB[ i ][ j ] = map[ i + selectArea.X ][ j + selectArea.Y ];
+      x = i + selectArea.X;
+      y = j + selectArea.Y;
+      resC[ i ][ j ] = clr[ x ][ y ];
+      resB[ i ][ j ] = map[ x ][ y ];
 
      }
     }
@@ -964,26 +996,27 @@ namespace CreativeModePlus
     Point pt = selectArea.Location;
 
     Undo.add( new ElemUndo( selectArea, clr, lyr, map, "Cut" ));
-    killSelect();
 
-    resC = new int[ selectArea.Width ][];
-    resB = new AlphaBlock[ selectArea.Width ][];
+    createCopy();
 
-    for( i = 0; i < selectArea.Width; pt.X++, i++ )
+    for( i = 0; i < selectArea.Width; i++ )
     {
-     resC[ i ] = new int[ selectArea.Height ];
-     resB[ i ] = new AlphaBlock[ selectArea.Height ];
-
-     for( j = 0; j < selectArea.Height; pt.Y++, j++ )
+     for( j = 0; j < selectArea.Height; j++ )
      {
+      pt.X = selectArea.X + i;
+      pt.Y = selectArea.Y + j;
       resC[ i ][ j ] = clr[ pt.X ][ pt.Y ];
       resB[ i ][ j ] = map[ pt.X ][ pt.Y ];
       clr[ pt.X ][ pt.Y ] = -1;
-      map[ pt.X ][ pt.Y ] = new AlphaBlock( 0 );
+      map[ pt.X ][ pt.Y ].ID = map[ pt.X ][ pt.Y ].Data = 0;
+      map[ pt.X ][ pt.Y ].ent = null;
       setPixel( pt, -1 );
 
      }
     }
+
+    killSelect();
+
    }
   }
 
@@ -999,23 +1032,27 @@ namespace CreativeModePlus
     selectArea.Location = Point.Empty;
     selectArea.Size     = new Size( resC.Length, resC[ 0 ].Length );
 
-    selC = resC;
-    selB = resB;
+    createSelectMover();
 
     for( pt.X = 0; pt.X < selectArea.Width; pt.X++ )
     {
      for( pt.Y = 0; pt.Y < selectArea.Height; pt.Y++ )
      {
-      setPixel( pt, mixColor( selC[ pt.X ][ pt.Y ], disp ));
+      setPixel( pt, mixColor( resC[ pt.X ][ pt.Y ], disp ));
+      selC[ pt.X ][ pt.Y ] = resC[ pt.X ][ pt.Y ];
+      selB[ pt.X ][ pt.Y ] = resB[ pt.X ][ pt.Y ];
 
      }
     }
+
+    display.Image = img;
+
    }
   }
 
   public void flatten()
   {
-   if( selC != null && selC[ 0 ][ 0 ] != -1 )
+   if( selC != null && selC[ 0 ][ 0 ] != -65281 )
     upSelect( Point.Empty );
 
   }

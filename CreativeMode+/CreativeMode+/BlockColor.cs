@@ -15,6 +15,9 @@ namespace CreativeModePlus
    if( blockColors == null )
     initBlockColors();
 
+   if( blkID < 0 || blkID > 136 )
+    blkID = 95;
+
    return blockColors[ blkID ];
 
   }
@@ -78,7 +81,7 @@ namespace CreativeModePlus
    blockColors[ 19 ] = -20382;//0xffffb062;
    blockColors[ 90 ] = -2653441;//0xffd782ff;
    blockColors[ 133 ] = -16711936;//0xff00ff00;
-   blockColors[ 95 ] = -65281;//0xffff00ff;
+   blockColors[ 95 ] = blockColors[ 36 ] = -65281;//0xffff00ff;
    blockColors[ 55 ] = blockColors[ 75 ] = blockColors[ 76 ] =
     blockColors[ 93 ] = blockColors[ 94 ] = blockColors[ 131 ] = -8388608;
    //0xff800000;
@@ -104,6 +107,7 @@ namespace CreativeModePlus
     blockColors[ 124 ] = -256;//0xffffff00;
    blockColors[ 58 ] = blockColors[ 84 ] = -15360;//0xffffc400;
    blockColors[ 41 ] = blockColors[ 27 ] = -27648;//0xffff9400;
+   blockColors[ 47 ] = -16350076;//0xff068484
 
   }
 

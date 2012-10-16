@@ -12,11 +12,21 @@ namespace CreativeModePlus
 
  }
 
+ public struct Block
+ {
+  public Block( int id ) { ID = id; Data = 0; ent = null; }
+
+  public int ID, Data;
+
+  public TileEntity ent;
+
+ }
+
  public struct Limits
  {
   public int[][] clr,
                  lyr;
-  public AlphaBlock[][] map;
+  public Block[][] map;
 
  }
 }

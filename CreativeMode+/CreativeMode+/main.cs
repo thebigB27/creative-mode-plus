@@ -28,10 +28,10 @@ namespace CreativeModePlus
   public frmMain()
   {
    int i;
-   AlphaBlock temp;
    Stream file  = null;
    String fname = "CreativeModePlus.res.block_icons.",
-          bname = "CreativeModePlus.res.brush.size.";
+          bname = "CreativeModePlus.res.brush.size.",
+          name;
 
    Asm.init();
    InitializeComponent();
@@ -52,8 +52,9 @@ namespace CreativeModePlus
     if( i != 95 && i != 36 && i != 34 ) // ignore certain block types
     {
      file = Asm.exe.GetManifestResourceStream( fname + i + ".png" );
-     temp  = new AlphaBlock( i );
-     cmbBlocks.Add( temp.Info.Name, Image.FromStream( file ), i );
+     name = ( "" + (( BlockNames ) i )).Replace( '_', ' ' );
+     cmbBlocks.Add( name, Image.FromStream( file ), i );
+     file.Close();
 
     }
 
@@ -61,6 +62,7 @@ namespace CreativeModePlus
     {
      file = Asm.exe.GetManifestResourceStream( bname + i + "x" + i + ".png" );
      cmbPaint.Add( "" + i, Image.FromStream( file ), i - 1 );
+     file.Close();
 
     }    
    }
@@ -177,7 +179,7 @@ namespace CreativeModePlus
    
    Tools.Tool.scaleImage( e.Delta );
 
-   mnuScale.Text = "" + ( int )( 100 * Tools.Tool.Scale ) + " %";
+   mnuScale.Text = "" + ( 100 * Tools.Tool.Scale ) + " %";
 
   }
 
@@ -193,7 +195,8 @@ namespace CreativeModePlus
    if( !LoadSave.threadRunning && Tools.Tool.Img != null )
     Tools.Tool.getBlockInfo( mnuBlock, e.Location );
 
-   mnuCoord.Text = "( " + e.Location.X + ", " + e.Location.Y + " )";
+   mnuCoord.Text = "( " + e.Location.X / Tools.Tool.Scale + ", " +
+                          e.Location.Y / Tools.Tool.Scale + " )";
 
    if( prev.X == -1 )
     prev = e.Location;
@@ -246,7 +249,7 @@ namespace CreativeModePlus
   private void mapImage_Up( object sender, MouseEventArgs e )
   {
    if( e.Button == MouseButtons.Left && !LoadSave.threadRunning )
-    Tools.doUp( Tools.Tool.adj( e.Location, false ));
+    Tools.doUp( Tools.Tool.adj( e.Location, true ));
 
   }
 
@@ -271,9 +274,13 @@ namespace CreativeModePlus
 
   private void pasteMenu_Click( object sender, EventArgs e )
   {
-   Tools.selectTool( "Move" );
-   Tools.Tool.paste();
+   if( LoadSave.Init )
+   {
+    Tools.selectTool( "Move" );
+    Cursor = Tools.getCursor();
+    Tools.Tool.paste();
 
+   }
   }
 
   private void cmbBlocks_SelectedIndexChanged(object sender, EventArgs e)

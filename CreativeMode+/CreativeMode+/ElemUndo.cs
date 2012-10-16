@@ -9,15 +9,15 @@ namespace CreativeModePlus
   private Rectangle area;
   private int[][] origClr,
                   origLyr;
-  private AlphaBlock[][] origBlk;
+  private Block[][] origBlk;
   public String name;
 
   public Rectangle undo( Rectangle sArea,
                          int[][] clr, 
                          int[][] lyr, 
-                         AlphaBlock[][] blks )
+                         Block[][] blks )
   {
-   AlphaBlock tmpB;
+   Block tmpB;
    int        tmpC, tmpL, i, j;
    Rectangle  tmpR = area;
 
@@ -49,20 +49,20 @@ namespace CreativeModePlus
   public ElemUndo( Rectangle sArea,
                    int[][] clr,
                    int[][] lyr,
-                   AlphaBlock[][] blk,
+                   Block[][] blk,
                    String cmd )
   {
    int i, j;
    name = cmd;
    area = new Rectangle( sArea.Location, sArea.Size );
 
-   origBlk = new AlphaBlock[ LoadSave.W ][];
+   origBlk = new Block[ LoadSave.W ][];
    origClr = new int[ LoadSave.W ][];
    origLyr = new int[ LoadSave.W ][];
 
    for( i = 0; i < LoadSave.W; i++ )
    {
-    origBlk[ i ] = new AlphaBlock[ LoadSave.H ];
+    origBlk[ i ] = new Block[ LoadSave.H ];
     origClr[ i ] = new int[ LoadSave.H ];
     origLyr[ i ] = new int[ LoadSave.H ];
 

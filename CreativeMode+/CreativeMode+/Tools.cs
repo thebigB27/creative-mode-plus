@@ -133,6 +133,7 @@ namespace CreativeModePlus
 
    }
 
+   click.Select();
    changeTool( click );
 
   }

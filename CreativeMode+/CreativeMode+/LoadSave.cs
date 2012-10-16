@@ -149,8 +149,6 @@ namespace CreativeModePlus
    if( region != null )
    {
     pReg = region;
-    if( reg != null )
-     reg.Dispose();
 
     changeLayer( first );
 
@@ -225,27 +223,21 @@ namespace CreativeModePlus
   {
    Limits l = new Limits();
 
-   int x, z;
+   int x;
 
    mnuStatus.Text = "Creating Map Storage";
    mnuLoad.Increment( -1 * hgt * wid );
 
    l.clr = new int[ wid ][];
    l.lyr = new int[ wid ][];
-   l.map = new AlphaBlock[ wid ][];
+   l.map = new Block[ wid ][];
 
    for( x = 0; x < wid; x++ )
    {
     l.clr[ x ] = new int[ hgt ];
     l.lyr[ x ] = new int[ hgt ];
-    l.map[ x ] = new AlphaBlock[ hgt ];
+    l.map[ x ] = new Block[ hgt ];
 
-    for( z = 0; z < hgt; z++ )
-    {
-     l.clr[ x ][ z ] = -65281;
-     l.lyr[ x ][ z ] = 0;   
-
-    }
     mnuLoad.Increment( hgt );
  
    }
@@ -260,8 +252,7 @@ namespace CreativeModePlus
   private static void loadLayers()
   {
    AlphaBlockCollection blk = null;
-   AlphaBlock temp;
-   int x, z, cx, cz, mx, mz;
+   int x, z, cx, cz, mx, mz, id;
 
    if( needSave )
     saveLayers();
@@ -278,25 +269,34 @@ namespace CreativeModePlus
     for( cz = 0; cz < czd; cz++ )
     {
      if( reg.ChunkExists( cx, cz ))
-     {
       blk = reg.GetChunkRef( cx, cz ).Blocks;
 
-      for( x = 0; x < xd; x++ )
+     else
+      blk = null;
+
+     for( x = 0; x < xd; x++ )
+     {
+      for( z = 0; z < zd; z++ )
       {
-       for( z = 0; z < zd; z++ )
+       mx = cx * xd + x;
+       mz = cz * zd + z;
+       if( blk != null )
        {
-        mx = cx * xd + x;
-        mz = cz * zd + z;
-        temp = blk.GetBlock( x, y, z );
-        Tools.Tool.Map[ mx ][ mz ] = temp;
-        Tools.Tool.Clr[ mx ][ mz ] = BlockColor.getBlockColor( temp.ID );
-
+        id = Tools.Tool.Map[ mx ][ mz ].ID = blk.GetID( x, y, z );
+        Tools.Tool.Map[ mx ][ mz ].Data = blk.GetData( x, y, z );
+        Tools.Tool.Map[ mx ][ mz ].ent = blk.GetTileEntity( x, y, z );
+        
        }
+
+       else
+        id = Tools.Tool.Map[ mx ][ mz ].ID = -1;
+       Tools.Tool.Clr[ mx ][ mz ] = BlockColor.getBlockColor( id );
+
       }
-
-      mnuLoad.Increment( xd * zd );
-
      }
+
+     mnuLoad.Increment( xd * zd );
+
     }
    }
    mnuLoad.Increment( -hgt * wid );
@@ -339,7 +339,7 @@ namespace CreativeModePlus
   private static void saveLayers()
   {
    AlphaBlockCollection chk = null;
-   int x, z, cx, cz;
+   int x, z, cx, cz, ax, az;
 
    mnuStatus.Text = "Saving Block Data";
 
@@ -354,8 +354,18 @@ namespace CreativeModePlus
       for( x = 0; x < xd; x++ )
       {
        for( z = 0; z < zd; z++ )
-        chk.SetBlock( x, y, z, Tools.Tool.Map[ cx * xd + x ][ cz * zd + z ]);
+       {
+        ax = cx * xd + x;
+        az = cz * zd + z;
+        chk.SetBlock( x,
+                      y,
+                      z,
+                      new AlphaBlock( Tools.Tool.Map[ ax ][ az ].ID,
+                                      Tools.Tool.Map[ ax ][ az ].Data ));
+        if( Tools.Tool.Map[ ax ][ az ].ent != null )
+         chk.SetTileEntity( x, y, z, Tools.Tool.Map[ ax ][ az ].ent );
 
+       }
       }
       
       mnuLoad.Increment( xd * zd );
@@ -364,6 +374,8 @@ namespace CreativeModePlus
      }
     }
    }
+
+   GC.Collect();
 
    mnuLoad.Increment( -hgt * wid );
    mnuStatus.Text = "Not Loading";
