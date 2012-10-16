@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -45,6 +46,7 @@ namespace CreativeModePlus
    String file  = "CreativeModePlus.res.brush.",
           fname = "";
    IntPtr hThis;
+   Stream sFile;
    int items;
    btnSelect = new Button();
    btnMove = new Button();
@@ -61,8 +63,9 @@ namespace CreativeModePlus
    btnSelect.Size = new System.Drawing.Size(25, 25);
    btnSelect.TabIndex = 5;
    fname = file + "Select_btn.png";
-   btnSelect.Image =
-    Image.FromStream( Asm.exe.GetManifestResourceStream( fname ));
+   sFile = Asm.exe.GetManifestResourceStream( fname );
+   btnSelect.Image = Image.FromStream( sFile );
+   sFile.Close();
    btnSelect.UseVisualStyleBackColor = true;
    btnSelect.Click += new EventHandler( btn_Pressed );
    // 
@@ -73,8 +76,9 @@ namespace CreativeModePlus
    btnMove.Size = new System.Drawing.Size(25, 25);
    btnMove.TabIndex = 1;
    fname = file + "MoveSelect_btn.png";
-   btnMove.Image =
-    Image.FromStream( Asm.exe.GetManifestResourceStream( fname ));
+   sFile = Asm.exe.GetManifestResourceStream( fname );
+   btnMove.Image = Image.FromStream( sFile );
+   sFile.Close();
    btnMove.UseVisualStyleBackColor = true;
    btnMove.Click += new EventHandler( btn_Pressed );
    // 
@@ -85,8 +89,9 @@ namespace CreativeModePlus
    btnFill.Size = new System.Drawing.Size(25, 25);
    btnFill.TabIndex = 3;
    fname = file + "Fill_btn.png";
-   btnFill.Image =
-    Image.FromStream( Asm.exe.GetManifestResourceStream( fname ));
+   sFile = Asm.exe.GetManifestResourceStream( fname );
+   btnFill.Image = Image.FromStream( sFile );
+   sFile.Close();
    btnFill.UseVisualStyleBackColor = true;
    btnFill.Click += new EventHandler( btn_Pressed );
    // 
@@ -97,8 +102,9 @@ namespace CreativeModePlus
    btnPaint.Size = new System.Drawing.Size(25, 25);
    btnPaint.TabIndex = 2;
    fname = file + "Paint_btn.png";
-   btnPaint.Image =
-    Image.FromStream( Asm.exe.GetManifestResourceStream( fname ));
+   sFile = Asm.exe.GetManifestResourceStream( fname );
+   btnPaint.Image = Image.FromStream( sFile );
+   sFile.Close();
    btnPaint.UseVisualStyleBackColor = true;
    btnPaint.Click += new EventHandler( btn_Pressed );
    // 
@@ -109,8 +115,9 @@ namespace CreativeModePlus
    btnPencil.Size = new System.Drawing.Size(25, 25);
    btnPencil.TabIndex = 4;
    fname = file + "Pencil_btn.png";
-   btnPencil.Image =
-    Image.FromStream( Asm.exe.GetManifestResourceStream( fname ));
+   sFile = Asm.exe.GetManifestResourceStream( fname );
+   btnPencil.Image = Image.FromStream( sFile );
+   sFile.Close();
    btnPencil.UseVisualStyleBackColor = true;
    btnPencil.Click += new EventHandler( btn_Pressed );
    //
@@ -125,8 +132,10 @@ namespace CreativeModePlus
    // Tools
    //
    fname = "CreativeModePlus.res.Minecraft-Icon.ico";
-   Bitmap icon = new Bitmap( Asm.exe.GetManifestResourceStream( fname ));
+   sFile = Asm.exe.GetManifestResourceStream( fname );
+   Bitmap icon = new Bitmap( sFile );
    Icon = Icon.FromHandle( icon.GetHicon());
+   sFile.Close();
    AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
    AutoScaleMode = AutoScaleMode.Font;
    ClientSize = new System.Drawing.Size(53, 80);

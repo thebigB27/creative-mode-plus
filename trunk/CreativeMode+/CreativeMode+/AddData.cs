@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Substrate;
@@ -15,26 +13,33 @@ namespace CreativeModePlus
 {
  public partial class AddData : Form
  {
-  public AddData( AlphaBlock plc, Form main )
-  {
-   InitializeComponent( main );
+  private static int id;
+  private static Block data;
+  public static Block Data{ get{ return data; }}
 
-   selectData( plc, plc.ID );
+  public static void getData( int ID, Form main )
+  {
+   AddData temp = new AddData( main );
+   data.ID = id = ID;
+   data.Data = 0;
+   data.ent = null;
+   temp.selectData( ID );
+   temp.Dispose();
 
   }
 
-  private void selectData( AlphaBlock plc, int ID )
+  private AddData( Form main )
+  {
+   InitializeComponent( main );
+
+  }
+
+  private void selectData( int ID )
   {
    switch( ID )
    {
-    default:
-     plc.Data = 0;
-
-    break;
-
-    // Monster Spawner
     case 52:
-     makeSpawner( plc );
+     data.ent = makeSpawner();
 
     break;
 
@@ -48,7 +53,7 @@ namespace CreativeModePlus
     case 134:
     case 135:
     case 136:
-     makeStairs( plc );
+     data.Data = makeStairs();
 
     break;
 
@@ -56,20 +61,20 @@ namespace CreativeModePlus
     case 50:
     case 75:
     case 76:
-     makeTorches( plc );
+     data.Data = makeTorches();
 
     break;
 
     // Repeaters
     case 93:
     case 94:
-     makeRepeaters( plc );
+     data.Data = makeRepeaters();
 
     break;
 
     // Wood Logs
     case 17:
-     makeLogs( plc );
+     data.Data = makeLogs();
 
     break;
 
@@ -78,52 +83,52 @@ namespace CreativeModePlus
     case 6:
     case 18:
     case 125:
-     makeWoodType( plc );
+     data.Data = makeWoodType();
 
     break;
 
     // Wood Slabs
     case 126:
-     makeWoodSlabs( plc );
+     data.Data = makeWoodSlabs();
 
     break;
 
     // Special Rails
     case 27:
     case 28:
-     makeSpRails( plc );
+     data.Data = makeSpRails();
 
     break;
 
     // Rails
     case 66:
-     makeRails( plc );
+     data.Data = makeRails();
 
     break;
 
     // Pistons
     case 29:
     case 33:
-     makePistons( plc );
+     data.Data = makePistons();
 
     break;
 
     // Tall Grass
     case 31:
-     makeGrass( plc );
+     data.Data = makeGrass();
 
     break;
 
     // Wool
     case 35:
-     makeWool( plc );
+     data.Data = makeWool();
 
     break;
 
     // Stone Slabs & doubles
     case 43:
     case 44:
-     makeStoneSlabs( plc );
+     data.Data = makeStoneSlabs();
 
     break;
 
@@ -135,7 +140,7 @@ namespace CreativeModePlus
     case 65:
     case 68:
     case 130:
-     makeChests( plc );
+     data.Data = makeChests();
 
     break;
 
@@ -143,19 +148,19 @@ namespace CreativeModePlus
     case 86:
     case 91:
     case 120:
-     makeEndPortalFrame( plc );
+     data.Data = makeEndPortalFrame();
 
     break;
 
     // Buttons
     case 77:
-     makeButtons( plc );
+     data.Data = makeButtons();
 
     break;
 
     // Sign
     case 63:
-     makeSign( plc );
+     data.Data = makeSign();
 
     break;
 
@@ -163,94 +168,95 @@ namespace CreativeModePlus
     case 59:
     case 104:
     case 105:
-     makeCrops( plc );
+     data.Data = makeCrops();
 
     break;
 
     // Nether Wart
     case 115:
-     makeWart( plc );
+     data.Data = makeWart();
 
     break;
 
     // Farmland
     case 60:
-     makeFarm( plc );
+     data.Data = makeFarm();
 
     break;
 
     // Redstone
     case 55:
-     makeWires( plc );
+     data.Data = makeWires();
 
     break;
 
     // Trip Wire Hooks
     case 131:
-     makeHooks( plc );
+     data.Data = makeHooks();
 
     break;
 
     // Lever
     case 69:
-     makeLevers( plc );
+     data.Data = makeLevers();
 
     break;
 
     // Bed
     case 26:
-     makeBed( plc );
+     data.Data = makeBed();
 
     break;
 
     // Doors
     case 64:
     case 71:
-     makeDoors( plc );
+     data.Data = makeDoors();
 
     break;
 
     // Fence Gate
     case 107:
-     makeFence( plc );
+     data.Data = makeFence();
 
     break;
 
     // Trap Door
     case 96:
-     makeTraps( plc );
+     data.Data = makeTraps();
 
     break;
 
     // Monster Eggs
     case 97:
-     makeEggs( plc );
+     data.Data = makeEggs();
 
     break;
 
     // Stone Brick
     case 98:
-     makeStoneBrick( plc );
+     data.Data = makeStoneBrick();
 
     break;
 
     // Sandstone
     case 24:
-     makeSandstone( plc );
+     data.Data = makeSandstone();
 
     break;
 
     // Vines
     case 106:
-     makeVines( plc );
+     data.Data = makeVines();
 
     break;
 
    }
   }
 
-  private void makeStairs( AlphaBlock plc )
+  private int makeStairs()
   {
+   int toRet = 0;
    RadioButton n = new RadioButton(),
                s = new RadioButton(),
                e = new RadioButton(),
@@ -284,24 +290,27 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( e.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else if( w.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else if( s.Checked )
-    plc.Data = 2;
+    toRet = 2;
 
    else
-    plc.Data = 3;
+    toRet = 3;
 
    if( inv.Checked )
-    plc.Data += 4;
+    toRet += 4;
+
+   return toRet;
 
   }
 
-  private void makeTorches( AlphaBlock plc )
+  private int makeTorches()
   {
+   int toRet = 0;
    RadioButton n = new RadioButton(),
                s = new RadioButton(),
                e = new RadioButton(),
@@ -335,24 +344,27 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( e.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else if( w.Checked )
-    plc.Data = 2;
+    toRet = 2;
 
    else if( s.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( n.Checked )
-    plc.Data = 4;
+    toRet = 4;
 
    else
-    plc.Data = 5;
+    toRet = 5;
+
+   return toRet;
 
   }
 
-  private void makeRepeaters( AlphaBlock plc )
+  private int makeRepeaters()
   {
+   int toRet = 0;
    RadioButton n = new RadioButton(),
                s = new RadioButton(),
                e = new RadioButton(),
@@ -395,18 +407,20 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( e.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else if( w.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( s.Checked )
-    plc.Data = 2;
+    toRet = 2;
 
    else
-    plc.Data = 0;
+    toRet = 0;
 
-   plc.Data += ( tkB.Value - 1 ) * 4;
+   toRet += ( tkB.Value - 1 ) * 4;
+
+   return toRet;
 
   }
 
@@ -423,8 +437,9 @@ namespace CreativeModePlus
 
   }
 
-  private void makeLogs( AlphaBlock plc )
+  private int makeLogs()
   {
+   int toRet = 0;
    RadioButton o  = new RadioButton(),
                s  = new RadioButton(),
                b  = new RadioButton(),
@@ -459,30 +474,33 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( b.Checked )
-    plc.Data = 2;
+    toRet = 2;
 
    else if( m.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( s.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else
-    plc.Data = 0;
+    toRet = 0;
 
    if( ort.SelectedIndex == 0 )
-    plc.Data += 0;
+    toRet += 0;
 
    else if( ort.SelectedIndex == 1 )
-    plc.Data += 4;
+    toRet += 4;
 
    else
-    plc.Data += 8;
+    toRet += 8;
+
+   return toRet;
 
   }
 
-  private void makeWoodType( AlphaBlock plc )
+  private int makeWoodType()
   {
+   int toRet = 0;
    RadioButton o  = new RadioButton(),
                s  = new RadioButton(),
                b  = new RadioButton(),
@@ -513,21 +531,24 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( b.Checked )
-    plc.Data = 2;
+    toRet = 2;
 
    else if( m.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( s.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else
-    plc.Data = 0;
+    toRet = 0;
+
+   return toRet;
 
   }
 
-  private void makeWoodSlabs( AlphaBlock plc )
+  private int makeWoodSlabs()
   {
+   int toRet = 0;
    RadioButton o  = new RadioButton(),
                s  = new RadioButton(),
                b  = new RadioButton(),
@@ -561,24 +582,27 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( b.Checked )
-    plc.Data = 2;
+    toRet = 2;
 
    else if( m.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( s.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else
-    plc.Data = 0;
+    toRet = 0;
 
    if( inv.Checked )
-    plc.Data += 8;
+    toRet += 8;
+
+   return toRet;
 
   }
 
-  private void makeSpRails( AlphaBlock plc )
+  private int makeSpRails()
   {
+   int toRet = 0;
    RadioButton ns = new RadioButton(),
                ew = new RadioButton(),
                n  = new RadioButton(),
@@ -602,7 +626,7 @@ namespace CreativeModePlus
 
    Controls.AddRange( new Control[]{ opt, ns, n, s, ew, e, w, pwr });
 
-   if( plc.ID == 28 )
+   if( id == 28 )
     pwr.Enabled = false;
 
    // Set Locations
@@ -621,30 +645,33 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( ns.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else if( ew.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else if( e.Checked )
-    plc.Data = 2;
+    toRet = 2;
 
    else if( w.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( n.Checked )
-    plc.Data = 4;
+    toRet = 4;
 
    else
-    plc.Data = 5;
+    toRet = 5;
 
    if( pwr.Checked )
-    plc.Data += 8;
+    toRet += 8;
+
+   return toRet;
 
   }
 
-  private void makeRails( AlphaBlock plc )
+  private int makeRails()
   {
+   int toRet = 0;
    ComboBoxWithIcons ort = new ComboBoxWithIcons();
    Label             opt = new Label();
 
@@ -670,50 +697,61 @@ namespace CreativeModePlus
 
    ShowDialog();
 
-   plc.Data = ort.SelectedIndex;
+   toRet = ort.SelectedIndex;
+
+   return toRet;
 
   }
 
   private void populate( ComboBoxWithIcons ort )
   {
-   String   pop = "CreativeModePlus.res.block_icons.rails.";
-   Assembly exe = Assembly.GetExecutingAssembly();
+   String pop = "CreativeModePlus.res.block_icons.rails.";
+   Stream file = Asm.exe.GetManifestResourceStream( pop + "0.png" );  
 
-   ort.Add( "North-South",
-            Image.FromStream( exe.GetManifestResourceStream( pop + "0.png" )),
-            -1 );
-   ort.Add( "East-West",
-            Image.FromStream( exe.GetManifestResourceStream( pop + "1.png" )),
-            -1 );
-   ort.Add( "Ascend East",
-            Image.FromStream( exe.GetManifestResourceStream( pop + "1.png" )),
-            -1 );
-   ort.Add( "Ascend West",
-            Image.FromStream( exe.GetManifestResourceStream( pop + "1.png" )),
-            -1 );
-   ort.Add( "Ascend North",
-            Image.FromStream( exe.GetManifestResourceStream( pop + "0.png" )),
-            -1 );
-   ort.Add( "Ascend South",
-            Image.FromStream( exe.GetManifestResourceStream( pop + "0.png" )),
-            -1 );
-   ort.Add( "South to East",
-            Image.FromStream( exe.GetManifestResourceStream( pop + "2.png" )),
-            -1 );
-   ort.Add( "South to West",
-            Image.FromStream( exe.GetManifestResourceStream( pop + "3.png" )),
-            -1 );
-   ort.Add( "North to West",
-            Image.FromStream( exe.GetManifestResourceStream( pop + "4.png" )),
-            -1 );
-   ort.Add( "North to East",
-            Image.FromStream( exe.GetManifestResourceStream( pop + "5.png" )),
-            -1 );
+   ort.Add( "North-South", Image.FromStream( file ), -1 );
+   file.Close();
+
+   file = Asm.exe.GetManifestResourceStream( pop + "1.png" );
+   ort.Add( "East-West", Image.FromStream( file ), -1 );
+   file.Close();
+
+   file = Asm.exe.GetManifestResourceStream( pop + "1.png" );
+   ort.Add( "Ascend East", Image.FromStream( file ), -1 );
+   file.Close();
+
+   file = Asm.exe.GetManifestResourceStream( pop + "1.png" );
+   ort.Add( "Ascend West", Image.FromStream( file ), -1 );
+   file.Close();
+
+   file = Asm.exe.GetManifestResourceStream( pop + "0.png" );
+   ort.Add( "Ascend North", Image.FromStream( file ), -1 );
+   file.Close();
+
+   file = Asm.exe.GetManifestResourceStream( pop + "0.png" );
+   ort.Add( "Ascend South", Image.FromStream( file ), -1 );
+   file.Close();
+
+   file = Asm.exe.GetManifestResourceStream( pop + "2.png" );
+   ort.Add( "South to East", Image.FromStream( file ), -1 );
+   file.Close();
+
+   file = Asm.exe.GetManifestResourceStream( pop + "3.png" );
+   ort.Add( "South to West", Image.FromStream( file ), -1 );
+   file.Close();
+
+   file = Asm.exe.GetManifestResourceStream( pop + "4.png" );
+   ort.Add( "North to West", Image.FromStream( file ), -1 );
+   file.Close();
+
+   file = Asm.exe.GetManifestResourceStream( pop + "5.png" );
+   ort.Add( "North to East", Image.FromStream( file ), -1 );
+   file.Close();
 
   }
 
-  private void makePistons( AlphaBlock plc )
+  private int makePistons()
   {
+   int toRet = 0;
    RadioButton d  = new RadioButton(),
                u  = new RadioButton(),
                n  = new RadioButton(),
@@ -753,30 +791,33 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( d.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else if( u.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else if( n.Checked )
-    plc.Data = 2;
+    toRet = 2;
 
    else if( s.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( w.Checked )
-    plc.Data = 4;
+    toRet = 4;
 
    else
-    plc.Data = 5;
+    toRet = 5;
 
    if( pwr.Checked )
-    plc.Data += 8;
+    toRet += 8;
+
+   return toRet;
 
   }
 
-  private void makeGrass( AlphaBlock plc )
+  private int makeGrass()
   {
+   int toRet = 0;
    RadioButton t = new RadioButton(),
                s = new RadioButton(),
                f = new RadioButton();
@@ -804,18 +845,21 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( s.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else if( t.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else 
-    plc.Data = 2;
+    toRet = 2;
+
+   return toRet;
 
   }
 
-  private void makeWool( AlphaBlock plc )
+  private int makeWool()
   {
+   int toRet = 0;
    ComboBox ort = new ComboBox();
    Label    opt = new Label();
 
@@ -851,12 +895,15 @@ namespace CreativeModePlus
 
    ShowDialog();
 
-   plc.Data = ort.SelectedIndex;
+   toRet = ort.SelectedIndex;
+
+   return toRet;
 
   }
 
-  private void makeStoneSlabs( AlphaBlock plc )
+  private int makeStoneSlabs()
   {
+   int toRet = 0;
    RadioButton ss = new RadioButton(),
                cs = new RadioButton(),
                b  = new RadioButton(),
@@ -878,7 +925,7 @@ namespace CreativeModePlus
 
    Controls.AddRange( new Control[]{ opt, s, b, ss, cs, sb, pwr });
 
-   if( plc.ID == 43 )
+   if( id == 43 )
     pwr.Enabled = false;
 
    // Set Locations
@@ -896,27 +943,30 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( s.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else if( ss.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else if( cs.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( b.Checked )
-    plc.Data = 4;
+    toRet = 4;
 
    else
-    plc.Data = 5;
+    toRet = 5;
 
    if( pwr.Checked )
-    plc.Data += 8;
+    toRet += 8;
+
+   return toRet;
 
   }
 
-  private void makeChests( AlphaBlock plc )
+  private int makeChests()
   {
+   int toRet = 0;
    RadioButton n = new RadioButton(),
                s = new RadioButton(),
                e = new RadioButton(),
@@ -926,7 +976,7 @@ namespace CreativeModePlus
    Size = new Size( 200, 136 );
 
    // Set Item Text
-   opt.Text = plc.Info.Name + " Options";
+   opt.Text = "" + (( BlockNames ) id ) + " Options";
    n.Text   = "North";
    s.Text   = "South";
    e.Text   = "East";
@@ -947,21 +997,24 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( e.Checked )
-    plc.Data = 5;
+    toRet = 5;
 
    else if( w.Checked )
-    plc.Data = 4;
+    toRet = 4;
 
    else if( s.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else
-    plc.Data = 2;
+    toRet = 2;
+
+   return toRet;
 
   }
 
-  private void makeEndPortalFrame( AlphaBlock plc )
+  private int makeEndPortalFrame()
   {
+   int toRet = 0;
    RadioButton n = new RadioButton(),
                s = new RadioButton(),
                e = new RadioButton(),
@@ -971,7 +1024,7 @@ namespace CreativeModePlus
    Size = new Size( 200, 136 );
 
    // Set Item Text
-   opt.Text = plc.Info.Name + " Options";
+   opt.Text = "" + (( BlockNames ) id ) + " Options";
    n.Text   = "North";
    s.Text   = "South";
    e.Text   = "East";
@@ -992,21 +1045,24 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( e.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( w.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else if( s.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else
-    plc.Data = 2;
+    toRet = 2;
+
+   return toRet;
 
   }
 
-  private void makeButtons( AlphaBlock plc )
+  private int makeButtons()
   {
+   int toRet = 0;
    RadioButton n = new RadioButton(),
                s = new RadioButton(),
                e = new RadioButton(),
@@ -1037,21 +1093,24 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( e.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else if( w.Checked )
-    plc.Data = 2;
+    toRet = 2;
 
    else if( s.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else
-    plc.Data = 4;
+    toRet = 4;
+
+   return toRet;
 
   }
 
-  private void makeSign( AlphaBlock plc )
+  private int makeSign()
   {
+   int toRet = 0;
    ComboBox ort = new ComboBox();
    Label    opt = new Label();
 
@@ -1087,12 +1146,15 @@ namespace CreativeModePlus
 
    ShowDialog();
 
-   plc.Data = ort.SelectedIndex;
+   toRet = ort.SelectedIndex;
+
+   return toRet;
 
   }
 
-  private void makeCrops( AlphaBlock plc )
+  private int makeCrops()
   {
+   int toRet = 0;
    RadioButton s = new RadioButton(),
                f = new RadioButton();
    Label       opt = new Label();
@@ -1117,15 +1179,18 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( s.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else 
-    plc.Data = 7;
+    toRet = 7;
+
+   return toRet;
 
   }
 
-  private void makeWart( AlphaBlock plc )
+  private int makeWart()
   {
+   int toRet = 0;
    RadioButton s = new RadioButton(),
                f = new RadioButton();
    Label       opt = new Label();
@@ -1150,15 +1215,18 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( s.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else 
-    plc.Data = 3;
+    toRet = 3;
+
+   return toRet;
 
   }
 
-  private void makeFarm( AlphaBlock plc )
+  private int makeFarm()
   {
+   int toRet = 0;
    RadioButton s = new RadioButton(),
                f = new RadioButton();
    Label       opt = new Label();
@@ -1183,15 +1251,18 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( s.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else 
-    plc.Data = 8;
+    toRet = 8;
+
+   return toRet;
 
   }
 
-  private void makeWires( AlphaBlock plc )
+  private int makeWires()
   {
+   int toRet = 0;
    RadioButton s = new RadioButton(),
                f = new RadioButton();
    Label       opt = new Label();
@@ -1216,15 +1287,18 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( s.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else 
-    plc.Data = 15;
+    toRet = 15;
+
+   return toRet;
 
   }
 
-  private void makeHooks( AlphaBlock plc )
+  private int makeHooks()
   {
+   int toRet = 0;
    RadioButton n = new RadioButton(),
                s = new RadioButton(),
                e = new RadioButton(),
@@ -1258,24 +1332,27 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( e.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( w.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else if( s.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else
-    plc.Data = 2;
+    toRet = 2;
 
    if( inv.Checked )
-    plc.Data += 4;
+    toRet += 4;
+
+   return toRet;
 
   }
 
-  private void makeLevers( AlphaBlock plc )
+  private int makeLevers()
   {
+   int toRet = 0;
    RadioButton gns = new RadioButton(),
                gew = new RadioButton(),
                cns = new RadioButton(),
@@ -1330,36 +1407,39 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( cns.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else if( e.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else if( w.Checked )
-    plc.Data = 2;
+    toRet = 2;
 
    else if( s.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( n.Checked )
-    plc.Data = 4;
+    toRet = 4;
 
    else if( gns.Checked )
-    plc.Data = 5;
+    toRet = 5;
 
    else if( gew.Checked )
-    plc.Data = 6;
+    toRet = 6;
    
    else
-    plc.Data = 7;
+    toRet = 7;
 
    if( pwr.Checked )
-    plc.Data += 8;
+    toRet += 8;
+
+   return toRet;
 
   }
 
-  private void makeBed( AlphaBlock plc )
+  private int makeBed()
   {
+   int toRet = 0;
    RadioButton n = new RadioButton(),
                s = new RadioButton(),
                e = new RadioButton(),
@@ -1390,21 +1470,24 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( e.Checked )
-    plc.Data = 11;
+    toRet = 11;
 
    else if( w.Checked )
-    plc.Data = 9;
+    toRet = 9;
 
    else if( s.Checked )
-    plc.Data = 8;
+    toRet = 8;
 
    else
-    plc.Data = 10;
+    toRet = 10;
+
+   return toRet;
 
   }
 
-  private void makeDoors( AlphaBlock plc )
+  private int makeDoors()
   {
+   int toRet = 0;
    RadioButton n = new RadioButton(),
                s = new RadioButton(),
                e = new RadioButton(),
@@ -1441,27 +1524,30 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( e.Checked )
-    plc.Data = 2;
+    toRet = 2;
 
    else if( w.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( s.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else
-    plc.Data = 0;
+    toRet = 0;
 
    if( inv.Checked )
-    plc.Data += 4;
+    toRet += 4;
 
    if( opn.Checked )
-    plc.Data += 8;
+    toRet += 8;
+
+   return toRet;
 
   }
 
-  private void makeFence( AlphaBlock plc )
+  private int makeFence()
   {
+   int toRet = 0;
    RadioButton n = new RadioButton(),
                s = new RadioButton(),
                e = new RadioButton(),
@@ -1495,24 +1581,27 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( e.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( w.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else if( s.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else
-    plc.Data = 2;
+    toRet = 2;
 
    if( opn.Checked )
-    plc.Data += 4;
+    toRet += 4;
+
+   return toRet;
 
   }
 
-  private void makeTraps( AlphaBlock plc )
+  private int makeTraps()
   {
+   int toRet = 0;
    RadioButton n = new RadioButton(),
                s = new RadioButton(),
                e = new RadioButton(),
@@ -1546,24 +1635,27 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( e.Checked )
-    plc.Data = 2;
+    toRet = 2;
 
    else if( w.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else if( s.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else
-    plc.Data = 1;
+    toRet = 1;
 
    if( opn.Checked )
-    plc.Data += 4;
+    toRet += 4;
+
+   return toRet;
 
   }
 
-  private void makeEggs( AlphaBlock plc )
+  private int makeEggs()
   {
+   int toRet = 0;
    RadioButton t = new RadioButton(),
                s = new RadioButton(),
                f = new RadioButton();
@@ -1591,18 +1683,21 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( s.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else if( t.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else 
-    plc.Data = 2;
+    toRet = 2;
+
+   return toRet;
 
   }
 
-  private void makeStoneBrick( AlphaBlock plc )
+  private int makeStoneBrick()
   {
+   int toRet = 0;
    RadioButton sb = new RadioButton(),
                cr = new RadioButton(),
                ms = new RadioButton(),
@@ -1633,21 +1728,24 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( sb.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else if( cr.Checked )
-    plc.Data = 2;
+    toRet = 2;
 
    else if( ms.Checked )
-    plc.Data = 3;
+    toRet = 3;
 
    else
-    plc.Data = 3;
+    toRet = 3;
+
+   return toRet;
 
   }
 
-  private void makeSandstone( AlphaBlock plc )
+  private int makeSandstone()
   {
+   int toRet = 0;
    RadioButton t = new RadioButton(),
                s = new RadioButton(),
                f = new RadioButton();
@@ -1675,18 +1773,21 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( s.Checked )
-    plc.Data = 1;
+    toRet = 1;
 
    else if( t.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    else 
-    plc.Data = 2;
+    toRet = 2;
+
+   return toRet;
 
   }
 
-  private void makeVines( AlphaBlock plc )
+  private int makeVines()
   {
+   int toRet = 0;
    CheckBox t = new CheckBox(),
             n = new CheckBox(),
             s = new CheckBox(),
@@ -1726,19 +1827,21 @@ namespace CreativeModePlus
    ShowDialog();
 
    if( t.Checked )
-    plc.Data = 0;
+    toRet = 0;
 
    if( n.Checked )
-    plc.Data += 4;
+    toRet += 4;
 
    if( s.Checked )
-    plc.Data += 1;
+    toRet += 1;
 
    if( e.Checked )
-    plc.Data += 8;
+    toRet += 8;
 
    if( w.Checked )
-    plc.Data += 2;
+    toRet += 2;
+
+   return toRet;
 
   }
 
@@ -1765,11 +1868,11 @@ namespace CreativeModePlus
    }
   }
 
-  private void makeSpawner( AlphaBlock plc )
+  private TileEntityMobSpawner makeSpawner()
   {
+   TileEntityMobSpawner toRet = new TileEntityMobSpawner();
    ComboBox ort = new ComboBox();
    Label    opt = new Label();
-   TileEntityMobSpawner mob;
 
    Size = new Size( 200, 120 );
 
@@ -1802,9 +1905,9 @@ namespace CreativeModePlus
 
    ShowDialog();
 
-   mob = (( TileEntityMobSpawner ) plc.GetTileEntity());
-   mob.EntityID = (( String ) ort.SelectedItem );
-   plc.SetTileEntity( mob ); 
+   toRet.EntityID = (( String ) ort.SelectedItem );
+
+   return toRet;
 
   }
  }

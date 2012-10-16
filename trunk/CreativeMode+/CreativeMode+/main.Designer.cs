@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using System;
 
@@ -34,7 +35,8 @@ namespace CreativeModePlus
   {
    int i;
    String fname = "CreativeModePlus.res.Minecraft-Icon.ico";
-   Bitmap icon = new Bitmap( Asm.exe.GetManifestResourceStream( fname ));
+   Stream file = Asm.exe.GetManifestResourceStream( fname );
+   Bitmap icon = new Bitmap( file );
    menuStrip1 = new MenuStrip();
    fileToolStripMenuItem = new ToolStripMenuItem();
    openMenu = new ToolStripMenuItem();
@@ -344,6 +346,8 @@ namespace CreativeModePlus
    // 
    // height
    // 
+   height.DropDownStyle = ComboBoxStyle.DropDownList;
+   height.FlatStyle = FlatStyle.Flat;
    height.Location = new Point(380, 27);
    height.Name = "height";
    height.Size = new Size(100, 21);
@@ -354,6 +358,7 @@ namespace CreativeModePlus
    // 
    cmbBlocks.DrawMode = DrawMode.OwnerDrawFixed;
    cmbBlocks.DropDownStyle = ComboBoxStyle.DropDownList;
+   cmbBlocks.FlatStyle = FlatStyle.Flat;
    cmbBlocks.FormattingEnabled = true;
    cmbBlocks.Location = new Point(0, 27);
    cmbBlocks.Name = "cmbBlocks";
@@ -367,6 +372,7 @@ namespace CreativeModePlus
    // 
    cmbPaint.DrawMode = DrawMode.OwnerDrawFixed;
    cmbPaint.DropDownStyle = ComboBoxStyle.DropDownList;
+   cmbPaint.FlatStyle = FlatStyle.Flat;
    cmbPaint.FormattingEnabled = true;
    cmbPaint.Location = new Point(190, 27);
    cmbPaint.Name = "cmbPaint";
@@ -407,6 +413,7 @@ namespace CreativeModePlus
    Controls.Add(pnlImage);
    FormClosing += new FormClosingEventHandler( frmMain_Closing );
    Icon = Icon.FromHandle( icon.GetHicon());
+   file.Close();
    Location = new Point(( Screen.PrimaryScreen.Bounds.Width - Width ) / 2,
                         ( Screen.PrimaryScreen.Bounds.Height - Height ) / 2 );
    MainMenuStrip = menuStrip1;
