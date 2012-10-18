@@ -9,11 +9,12 @@ namespace CreativeModePlus
  class Asm
  {
   public static Assembly exe = null;
+  public static Version  ver = null;
 
   public static void init()
   {
    exe = Assembly.GetExecutingAssembly();
-
+   ver = Assembly.GetEntryAssembly().GetName().Version;
   }
  }
 }

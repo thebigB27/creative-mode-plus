@@ -865,15 +865,18 @@ namespace CreativeModePlus
     {
      for( j = 0; j < selectArea.Height; j++ )
      {
-      x = i + selectArea.X;
-      y = j + selectArea.Y;
-      selC[ i ][ j ] = clr[ x ][ y ];
-      selB[ i ][ j ] = map[ x ][ y ];
-      clr[ x ][ y ] = -1;
-      map[ x ][ y ].Data = map[ x ][ y ].ID = 0;
-      map[ x ][ y ].ent = null;
-      lyr[ x ][ y ] = 0;
+      if( i < LoadSave.W && j < LoadSave.H )
+      {
+       x = i + selectArea.X;
+       y = j + selectArea.Y;
+       selC[ i ][ j ] = clr[ x ][ y ];
+       selB[ i ][ j ] = map[ x ][ y ];
+       clr[ x ][ y ] = -1;
+       map[ x ][ y ].Data = map[ x ][ y ].ID = 0;
+       map[ x ][ y ].ent = null;
+       lyr[ x ][ y ] = 0;
 
+      }
      }
     }
    }
@@ -889,13 +892,16 @@ namespace CreativeModePlus
     {
      for( j = 0; j < selectArea.Height; j++ )
      {
-      x = i + selectArea.X;
-      y = j + selectArea.Y;
-      clr[ x ][ y ] = selC[ i ][ j ];
-      map[ x ][ y ] = selB[ i ][ j ];
-      lyr[ x ][ y ] = disp;
-      selC[ i ][ j ] = -65281;
+      if( i < LoadSave.W && j < LoadSave.H )
+      {
+       x = i + selectArea.X;
+       y = j + selectArea.Y;
+       clr[ x ][ y ] = selC[ i ][ j ];
+       map[ x ][ y ] = selB[ i ][ j ];
+       lyr[ x ][ y ] = disp;
+       selC[ i ][ j ] = -65281;
 
+      }
      }
     }
    }
@@ -944,7 +950,9 @@ namespace CreativeModePlus
   {
    int i, j;
 
-   if( resC == null || ( resC.Length != selC.Length ))
+   if( resC == null ||
+     ( resC.Length != selC.Length ||
+       resC[ 0 ].Length != selC[ 0 ].Length ))
    {
     resB = new Block[ selectArea.Width ][];
     resC = new int[ selectArea.Width ][];
@@ -1024,23 +1032,26 @@ namespace CreativeModePlus
   {
    if( resC != null )
    {
-    Point pt = Point.Empty;
+    Point pt = new Point(( -display.Location.X + scl / 2 ) / scl,
+                         ( -display.Location.Y + scl / 2 ) / scl );
+
+    int x, y;
     
     Undo.add( new ElemUndo( selectArea, clr, lyr, map, "Paste" ));
     killSelect();
 
-    selectArea.Location = Point.Empty;
+    selectArea.Location = pt;
     selectArea.Size     = new Size( resC.Length, resC[ 0 ].Length );
 
     createSelectMover();
 
-    for( pt.X = 0; pt.X < selectArea.Width; pt.X++ )
+    for( x = 0, pt.X = selectArea.X; x < selectArea.Width; x++, pt.X++ )
     {
-     for( pt.Y = 0; pt.Y < selectArea.Height; pt.Y++ )
+     for( y = 0, pt.Y = selectArea.Y; y < selectArea.Height; y++, pt.Y++ )
      {
-      setPixel( pt, mixColor( resC[ pt.X ][ pt.Y ], disp ));
-      selC[ pt.X ][ pt.Y ] = resC[ pt.X ][ pt.Y ];
-      selB[ pt.X ][ pt.Y ] = resB[ pt.X ][ pt.Y ];
+      setPixel( pt, mixColor( resC[ x ][ y ], disp ));
+      selC[ x ][ y ] = resC[ x ][ y ];
+      selB[ x ][ y ] = resB[ x ][ y ];
 
      }
     }

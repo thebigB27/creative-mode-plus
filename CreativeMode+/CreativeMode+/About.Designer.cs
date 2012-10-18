@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -43,6 +44,7 @@ namespace CreativeModePlus
   private void InitializeComponent( Form parent )
   {
    String fname = "CreativeModePlus.res.Logo.png";
+   Stream file = Asm.exe.GetManifestResourceStream( fname );
    IntPtr hThis;
    int items;
    System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
@@ -65,10 +67,11 @@ namespace CreativeModePlus
    // 
    pictureBox1.Location = new Point(12, 12);
    pictureBox1.Name = "pictureBox1";
-   pictureBox1.Image = new Bitmap( Asm.exe.GetManifestResourceStream( fname ));
+   pictureBox1.Image = new Bitmap( file );
    pictureBox1.Size = new Size(175, 175);
    pictureBox1.TabIndex = 1;
    pictureBox1.TabStop = false;
+   file.Close();
    // 
    // btnOk
    // 
@@ -95,7 +98,7 @@ namespace CreativeModePlus
    MinimizeBox = false;
    Name = "About";
    StartPosition = FormStartPosition.Manual;
-   Text = "About";
+   Text = "About          Creative Mode Plus, Ver: " + Asm.ver.ToString();
    ((System.ComponentModel.ISupportInitialize)(pictureBox1)).EndInit();
    ResumeLayout(false);
    PerformLayout();

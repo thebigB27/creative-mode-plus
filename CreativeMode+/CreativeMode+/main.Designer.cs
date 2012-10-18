@@ -57,6 +57,7 @@ namespace CreativeModePlus
    mapToolStripMenuItem = new ToolStripMenuItem();
    regionMenu = new ToolStripMenuItem();
    helpToolStripMenuItem = new ToolStripMenuItem();
+   helpMenu = new ToolStripMenuItem();
    aboutMenu = new ToolStripMenuItem();
    mnuScale = new ToolStripTextBox();
    height = new ComboBox();
@@ -218,10 +219,18 @@ namespace CreativeModePlus
    // helpToolStripMenuItem
    // 
    helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
-            aboutMenu});
+            helpMenu, aboutMenu});
    helpToolStripMenuItem.Name = "helpToolStripMenuItem";
    helpToolStripMenuItem.Size = new Size(44, 23);
    helpToolStripMenuItem.Text = "&Help";
+   //
+   // helpMenu
+   //
+   helpMenu.Name = "helpMenu";
+   helpMenu.ShortcutKeys = Keys.F1;
+   helpMenu.Size = new Size( 149, 22 );
+   helpMenu.Text = "&Help";
+   helpMenu.Click += new EventHandler( helpMenu_Click );
    // 
    // aboutMenu
    // 
@@ -326,8 +335,7 @@ namespace CreativeModePlus
    pnlImage.Name = "pnlImage";
    pnlImage.Size = new Size(528, 550);
    pnlImage.TabIndex = 4;
-   pnlImage.Scroll += new ScrollEventHandler(pnlImage_Scroll);
-   pnlImage.MouseWheel += new MouseEventHandler(frm_Wheel);
+   pnlImage.MouseWheel += new MouseEventHandler( pnlImage_Wheel );
    // 
    // mapImage
    // 
@@ -453,6 +461,7 @@ namespace CreativeModePlus
   private ToolStripMenuItem viewToolStripMenuItem;
   private ToolStripMenuItem toolsMenu;
   private ToolStripMenuItem helpToolStripMenuItem;
+  private ToolStripMenuItem helpMenu;
   private ToolStripMenuItem aboutMenu;
   private ToolStripMenuItem mapToolStripMenuItem;
   private ToolStripMenuItem regionMenu;

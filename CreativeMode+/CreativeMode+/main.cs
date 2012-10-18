@@ -19,8 +19,7 @@ namespace CreativeModePlus
  public partial class frmMain : Form
  {
   private Tools tools = null;
-  private Point prev;
-  private Point prevScrl;
+  private Point prev, prevScrl;
   private int prevVal;
 
   public static frmMain hInst;
@@ -86,7 +85,9 @@ namespace CreativeModePlus
        height.SelectedIndex != prevVal )
    {
     prevVal = height.SelectedIndex;
-   
+    
+    Undo.clear();
+
     LoadSave.changeLayer( false );
 
    }
@@ -120,6 +121,12 @@ namespace CreativeModePlus
   private void aboutMenu_Click(object sender, EventArgs e)
   {
    new About( this ).ShowDialog( this );
+
+  }
+
+  private void helpMenu_Click(object sender, EventArgs e)
+  {
+   System.Diagnostics.Process.Start( "CMPHelp.pdf" );
 
   }
 
@@ -173,20 +180,11 @@ namespace CreativeModePlus
    }
   }
 
-  private void frm_Wheel( object sender, MouseEventArgs e )
+  private void pnlImage_Wheel( object sender, MouseEventArgs e )
   {
-   pnlImage.AutoScrollOffset = prevScrl;
-   
    Tools.Tool.scaleImage( e.Delta );
 
    mnuScale.Text = "" + ( 100 * Tools.Tool.Scale ) + " %";
-
-  }
-
-  private void pnlImage_Scroll( object sender, ScrollEventArgs e )
-  {
-   prevScrl = new Point( pnlImage.HorizontalScroll.Value,
-                         pnlImage.VerticalScroll.Value );
 
   }
 
