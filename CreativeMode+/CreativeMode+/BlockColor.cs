@@ -15,7 +15,7 @@ namespace CreativeModePlus
    if( blockColors == null )
     initBlockColors();
 
-   if( blkID < 0 || blkID > 136 )
+   if( blkID < 0 || blkID > 145 )
     blkID = 95;
 
    return blockColors[ blkID ];
@@ -24,7 +24,7 @@ namespace CreativeModePlus
 
   public static void initBlockColors()
   {
-   blockColors = new int[ 137 ];
+   blockColors = new int[ 146 ];
    
    // Set to default colors
    blockColors[ 52 ] = -15790321;//0xff0f0f0f;
@@ -32,7 +32,7 @@ namespace CreativeModePlus
    blockColors[ 22 ] = -16776961;//0xff0000ff;
    blockColors[ 3 ] = blockColors[ 60 ] = -8372224;//0xff804000;
    blockColors[ 87 ] = -2354116;//0xffdc143c;
-   blockColors[ 57 ] = -16711681;//0xff00ffff;
+   blockColors[ 57 ] = blockColors[ 138 ]-16711681;//0xff00ffff;
    blockColors[ 88 ] = -12574720;//0xff402000;
    blockColors[ 54 ] = -6270976;//0xffa05000;
    blockColors[ 13 ] = blockColors[ 118 ] = -8355712;//0xff808080;
@@ -49,15 +49,17 @@ namespace CreativeModePlus
     blockColors[ 68 ] = blockColors[ 72 ] = blockColors[ 85 ] =
     blockColors[ 96 ] = blockColors[ 107 ] = blockColors[ 125 ] =
     blockColors[ 126 ] = blockColors[ 134 ] = blockColors[ 135 ] =
-    blockColors[ 136 ] = -3907072;//0xffc46200;
+    blockColors[ 136 ] = blockColors[ 143 ] = -3907072;//0xffc46200;
    blockColors[ 29 ] = blockColors[ 33 ] = blockColors[ 34 ] = -3890624;
    //0xffc4a240;
    blockColors[ 4 ] = blockColors[ 23 ] = blockColors[ 43 ] =
     blockColors[ 44 ] = blockColors[ 61 ] = blockColors[ 62 ] =
-    blockColors[ 67 ] = blockColors[ 69 ] = blockColors[ 97 ] = -5658199;
+    blockColors[ 67 ] = blockColors[ 69 ] = blockColors[ 97 ] =
+    blockColors[ 139 ] = -5658199;
    //0xffa9a9a9;
    blockColors[ 48 ] = -8338304;//0xff80c480;
-   blockColors[ 45 ] = blockColors[ 108 ] = -3899264;//0xffc48080;
+   blockColors[ 45 ] = blockColors[ 108 ] = blockColors[ 137 ] =
+    blockColors[ 140 ] = -3899264;//0xffc48080;
    blockColors[ 2 ] = -16744448;//0xff008000;
    blockColors[ 8 ] = blockColors[ 9 ] = -7876885;//0xff87ceeb;
    blockColors[ 79 ] = -8323073;//0xff80ffff;
@@ -74,7 +76,8 @@ namespace CreativeModePlus
     blockColors[ 39 ] = blockColors[ 40 ] = blockColors[ 81 ] =
     blockColors[ 83 ] = blockColors[ 99 ] = blockColors[ 100 ] =
     blockColors[ 104 ] = blockColors[ 105 ] = blockColors[ 106 ] =
-    blockColors[ 111 ] = blockColors[ 115 ] = blockColors[ 127 ] = -7278960;
+    blockColors[ 111 ] = blockColors[ 115 ] = blockColors[ 127 ] = 
+    blockColors[ 141 ] = blockColors[ 142 ] = -7278960;
    //0xff90ee90;
    blockColors[ 28 ] = blockColors[ 42 ] = blockColors[ 66 ] =
     blockColors[ 71 ] = blockColors[ 101 ] = -7039852;//0xff949494;
@@ -108,6 +111,8 @@ namespace CreativeModePlus
    blockColors[ 58 ] = blockColors[ 84 ] = -15360;//0xffffc400;
    blockColors[ 41 ] = blockColors[ 27 ] = -27648;//0xffff9400;
    blockColors[ 47 ] = -16350076;//0xff068484
+   blockColors[ 144 ] = -11865;//0xffFFD1A7
+   blockColors[ 145 ] = -12566464;//0xff404040
 
   }
 

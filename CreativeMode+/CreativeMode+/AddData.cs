@@ -154,6 +154,7 @@ namespace CreativeModePlus
 
     // Buttons
     case 77:
+    case 143:
      data.Data = makeButtons();
 
     break;
@@ -172,8 +173,10 @@ namespace CreativeModePlus
 
     break;
 
-    // Nether Wart
+    // Nether Wart, carrots and potatoes
     case 115:
+    case 141:
+    case 142:
      data.Data = makeWart();
 
     break;
@@ -251,7 +254,77 @@ namespace CreativeModePlus
 
     break;
 
+    // Heads THIS SECTION WILL DO SOMETHING WHEN MORE INFORMATION COMES OUT
+    /*case 144:
+     data.ent = makeHead();
+
+    break;*/
+
+    // Anvil
+    case 145:
+     data.Data = makeAnvil();
+
+    break;
+
    }
+  }
+
+  private int makeAnvil()
+  {
+   int toRet = 0;
+   RadioButton s  = new RadioButton(),
+               w  = new RadioButton(),
+               n  = new RadioButton(),
+               e  = new RadioButton();
+   ComboBox    ort = new ComboBox();
+   Label       opt = new Label();
+
+   Size = new Size( 200, 159 );
+
+   // Set Item Text
+   opt.Text = "Anvil Options";
+   s.Text   = "South";
+   w.Text   = "West";
+   n.Text   = "North";
+   e.Text   = "East";
+
+   ort.Items.AddRange( new object[]{ "Undamaged", "Slight", "Heavy" });
+   Controls.AddRange( new Control[]{ opt, s, w, n, e, ort });
+
+   // Set Locations
+   opt.Location     = new Point( 12, 9 );
+   s.Location       = new Point( 15, 27 );
+   w.Location       = new Point( 125, 27 );
+   n.Location       = new Point( 15, 50 );
+   e.Location       = new Point( 125, 50 );
+   ort.Location     = new Point( 15, 75 );
+   btnData.Location = new Point( 15, 98 );
+
+   s.Checked = true;
+   ort.SelectedIndex = 0;
+
+   ShowDialog();
+
+   if( s.Checked )
+    toRet = 0;
+
+   else if( w.Checked )
+    toRet = 1;
+
+   else if( n.Checked )
+    toRet = 2;
+
+   else
+    toRet = 3;
+
+   if( ort.SelectedIndex == 1 )
+    toRet += 4;
+
+   else if( ort.SelectedIndex == 2 )
+    toRet += 8;
+
+   return toRet;
+
   }
 
   private int makeStairs()
@@ -1198,7 +1271,7 @@ namespace CreativeModePlus
    Size = new Size( 225, 115 );
 
    // Set Item Text
-   opt.Text = "Wart Options";
+   opt.Text = "Crop Options";
    s.Text   = "Just Planted";
    f.Text   = "Full Grown";
 
@@ -1891,8 +1964,8 @@ namespace CreativeModePlus
                                      "Silverfish",
                                      "Blaze",
                                      "LavaSlime",
-                                     "EnderDragon" });
-                                     //"Whither", });
+                                     "EnderDragon",
+                                     "Whither" });
 
    Controls.AddRange( new Control[]{ opt, ort });
 

@@ -46,7 +46,7 @@ namespace CreativeModePlus
    tools = new Tools( this, mapImage );
    hInst = this;
 
-   for( i = 0; i < 137; i++ )
+   for( i = 0; i < 146; i++ )
    {
     if( i != 95 && i != 36 && i != 34 ) // ignore certain block types
     {
