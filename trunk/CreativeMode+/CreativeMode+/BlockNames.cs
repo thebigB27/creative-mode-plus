@@ -135,7 +135,16 @@ namespace CreativeModePlus
   Emerald_Block = 133,
   Sprice_Wood_Stairs = 134,
   Birch_Wood_Stairs = 135,
-  Jungle_Wood_Stairs = 136
+  Jungle_Wood_Stairs = 136,
+  Command_Block = 137,
+  Beacon_Block = 138,
+  Cobblestone_Wall = 139,
+  Flower_Pot = 140,
+  Carrots = 141,
+  Potatoes = 142,
+  Wood_Button = 143,
+  Head = 144,
+  Anvil = 145
 
  }
 }
