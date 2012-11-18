@@ -111,19 +111,11 @@ namespace CreativeModePlus
 
   private static void loadLimits()
   {
-   AnvilRegion temp = (( AnvilRegion ) 
-                         lvl.GetRegionManager().GetRegion( 0, 0 ));
+   cxd = czd = 32;
+   xd  = zd  = 16;
+   wid = hgt = 512;
 
-   AlphaBlockCollection blk = temp.GetChunkRef( 0, 0 ).Blocks;
-
-   cxd = temp.XDim;
-   czd = temp.ZDim;
-   xd  = blk.XDim;
-   zd  = blk.ZDim;
-   wid = xd * cxd;
-   hgt = zd * czd;
-
-   mnuLoad.Maximum = wid * hgt;
+   mnuLoad.Maximum = 262144;
 
    startThread( RunThread.Init );
 
